@@ -8,11 +8,14 @@ import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.vo.HotArticleVo;
 import com.wbw1537.mapper.ArticleMapper;
 import com.wbw1537.service.ArticleService;
+import com.wbw1537.utils.BeanCopyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.wbw1537.constants.SystemConstants.ARTICLE_STATUS_NORMAL;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
@@ -22,7 +25,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
 
         //要求为正式文章
-        queryWrapper.eq(Article::getStatus,0);
+        queryWrapper.eq(Article::getStatus,ARTICLE_STATUS_NORMAL);
 
         //降序排序
         queryWrapper.orderByDesc(Article::getViewCount);
@@ -32,15 +35,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         page(page,queryWrapper);
         List<Article> articles = page.getRecords();
 
-        //bean拷贝
-        List<HotArticleVo> articleVos = new ArrayList<>();
-        for (Article article : articles){
-            HotArticleVo vo = new HotArticleVo();
-            BeanUtils.copyProperties(article,vo);
-            articleVos.add(vo);
-        }
+//        //bean拷贝
+//        List<HotArticleVo> articleVos = new ArrayList<>();
+//        for (Article article : articles){
+//            HotArticleVo vo = new HotArticleVo();
+//            BeanUtils.copyProperties(article,vo);
+//            articleVos.add(vo);
+//        }
+        List<HotArticleVo> hotArticleVoList = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
 
-
-        return ResponseResult.okResult(articles);
+        return ResponseResult.okResult(hotArticleVoList);
     }
 }
