@@ -22,4 +22,6 @@ public class ArticleController {
         ResponseResult result = articleService.hotArticleList();
         return result;
     }
+
+
 }
