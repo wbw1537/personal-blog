@@ -37,7 +37,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         LambdaQueryWrapper<Article> articleLambdaQueryWrapper = new LambdaQueryWrapper<>();
         articleLambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
         List<Article> articleList = articleService.list(articleLambdaQueryWrapper);
-        //获取文章分类id（去重）
+        //获取文章分类id（去重）1
         Set<Long> categoryIds = articleList.stream()
                 .map(article -> article.getCategoryId())
                 .collect(Collectors.toSet());

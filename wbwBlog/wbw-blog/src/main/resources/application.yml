@@ -5,6 +5,8 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/sg_blog
     username: root
     password: Wang123999,.,
+#  main:
+#    allow-circular-references: true
   servlet:
     multipart:
       max-file-size: 2MB
