@@ -3,9 +3,12 @@ package com.wbw1537.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.vo.ArticleListVo;
 import com.wbw1537.domain.vo.HotArticleVo;
+import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.mapper.ArticleMapper;
 import com.wbw1537.service.ArticleService;
 import com.wbw1537.utils.BeanCopyUtils;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.wbw1537.constants.SystemConstants.ARTICLE_STATUS_NORMAL;
 
@@ -45,5 +49,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<HotArticleVo> hotArticleVoList = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
 
         return ResponseResult.okResult(hotArticleVoList);
+    }
+
+    @Override
+    public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
+        //查询条件:
+        LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //categoryId是否有参
+        lambdaQueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0,Article::getCategoryId,categoryId);
+        //查询文章是否正式发布
+        lambdaQueryWrapper.eq(Article::getStatus, ARTICLE_STATUS_NORMAL);
+        //筛选置顶文章（对isTop降序排序）
+        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        //分页查询
+        Page<Article> page = new Page<>(pageNum,pageSize);
+        page(page,lambdaQueryWrapper);
+        //封装查询结果
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
+
+        PageVo pageVo = new PageVo(articleListVos, page.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 }
