@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.entity.Category;
+import com.wbw1537.domain.vo.ArticleDetailVo;
 import com.wbw1537.domain.vo.ArticleListVo;
 import com.wbw1537.domain.vo.HotArticleVo;
 import com.wbw1537.domain.vo.PageVo;
@@ -87,5 +89,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         PageVo pageVo = new PageVo(articleListVos, page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleDetail(Long id) {
+        //根据id查询文章内容
+        Article article = getById(id);
+        //转换成vo
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article,ArticleDetailVo.class);
+        //根据分类id查询分类名称
+        Long categoryId = articleDetailVo.getCategoryId();
+        Category category = categoryMapper.selectById(categoryId);
+        if(category != null){
+            articleDetailVo.setCategoryName(category.getName());
+        }
+        //封装查询结果
+        return ResponseResult.okResult(articleDetailVo);
     }
 }
