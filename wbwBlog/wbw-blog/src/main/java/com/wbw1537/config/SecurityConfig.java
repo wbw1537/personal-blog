@@ -1,6 +1,9 @@
 package com.wbw1537.config;
 
 import com.wbw1537.filter.JwtAuthenticationTokenFilter;
+//import com.wbw1537.handler.security.AccessDeniedHandler;
+//import com.wbw1537.handler.security.AuthenticationEntryPoint;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/login").anonymous()
-                //.antMatchers("/link/getAllLink").authenticated() 测试
+                .antMatchers("/logout").authenticated()
+                //测试
+                .antMatchers("/link/getAllLink").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
                 .anyRequest().permitAll();
 

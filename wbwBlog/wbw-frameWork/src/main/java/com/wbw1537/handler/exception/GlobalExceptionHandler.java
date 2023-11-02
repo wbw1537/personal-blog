@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         return ResponseResult.errorResult(e.getCode(), e.getMsg());
     }
 
-    @ExceptionHandler(SystemException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseResult exceptionHandler(Exception e) {
         //打印异常信息
         log.error("出现了异常！{}",e.getMessage());
