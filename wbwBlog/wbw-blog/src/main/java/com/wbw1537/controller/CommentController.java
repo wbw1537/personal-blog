@@ -1,5 +1,6 @@
 package com.wbw1537.controller;
 
+import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Comment;
 import com.wbw1537.service.CommentService;
@@ -13,12 +14,17 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/commentList")
-    public ResponseResult commentList(Long articleId,Integer pageNum,Integer pageSize){
-        return commentService.commentList(articleId,pageNum,pageSize);
+    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
+        return commentService.commentList(SystemConstants.ARTICLE_COMMENT,articleId, pageNum, pageSize);
+    }
+
+    @GetMapping("/linkCommentList")
+    public ResponseResult linkCommentList(Integer pageNum, Integer pageSize) {
+        return commentService.commentList(SystemConstants.LINK_COMMENT,null, pageNum, pageSize);
     }
 
     @PostMapping
-    public ResponseResult addComment(@RequestBody Comment comment){
+    public ResponseResult addComment(@RequestBody Comment comment) {
         return commentService.addComment(comment);
     }
 }
