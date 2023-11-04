@@ -9,12 +9,17 @@ import com.wbw1537.domain.entity.Comment;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.CommentVo;
 import com.wbw1537.domain.vo.PageVo;
+import com.wbw1537.enums.AppHttpCodeEnum;
+import com.wbw1537.exception.SystemException;
 import com.wbw1537.mapper.CommentMapper;
 import com.wbw1537.service.CommentService;
 import com.wbw1537.service.UserService;
 import com.wbw1537.utils.BeanCopyUtils;
+import com.wbw1537.utils.SecurityUtils;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -57,6 +62,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         }
         return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addComment(Comment comment) {
+        // 评论内容不能为空
+        if(!StringUtils.hasText(comment.getContent())){
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        // TODO: 可以添加敏感词检测类似功能
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     /**

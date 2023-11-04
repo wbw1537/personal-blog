@@ -1,5 +1,7 @@
 package com.wbw1537.domain.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.wbw1537.domain.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class CommentVo {
     private String content;
     //所回复的目标评论的userid
     private Long toCommentUserId;
+
     private String toCommentUserName;
     //回复目标评论id
     private Long toCommentId;
