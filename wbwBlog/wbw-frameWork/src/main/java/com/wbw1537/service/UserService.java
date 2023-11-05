@@ -1,6 +1,7 @@
 package com.wbw1537.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.User;
 
 
@@ -12,4 +13,5 @@ import com.wbw1537.domain.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    public ResponseResult userInfo();
 }
