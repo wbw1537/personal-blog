@@ -2,6 +2,7 @@ package com.wbw1537.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.mysql.cj.log.Log;
+import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.enums.AppHttpCodeEnum;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
+
+import static com.wbw1537.constants.SystemConstants.BLOG_LOGIN;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -54,7 +57,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         String userId = claims.getSubject();
         //从redis中获取用户信息
-        LoginUser loginUser = redisCache.getCacheObject("bloglogin:" + userId);
+        LoginUser loginUser = redisCache.getCacheObject(BLOG_LOGIN + userId);
         //如果获取不到
         if(Objects.isNull(loginUser)){
             //说明登陆过期 提示重新登录

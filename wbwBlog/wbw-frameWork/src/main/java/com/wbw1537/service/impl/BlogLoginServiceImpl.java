@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.security.Security;
 import java.util.Objects;
 
+import static com.wbw1537.constants.SystemConstants.BLOG_LOGIN;
+
 @Service
 public class BlogLoginServiceImpl implements BlogLoginService {
 
@@ -28,13 +30,14 @@ public class BlogLoginServiceImpl implements BlogLoginService {
 
     @Autowired
     private RedisCache redisCache;
+
     @Override
     public ResponseResult login(User user) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
         // 调用UserDetailsService
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 判断是否认证通过
-        if(Objects.isNull(authenticate)){
+        if (Objects.isNull(authenticate)) {
             throw new RuntimeException("用户名或密码错误");
         }
         //获取userId生成token
@@ -42,12 +45,12 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         String userId = loginUser.getUser().getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         // 把用户信息存入redis
-        redisCache.setCacheObject("bloglogin:"+userId,loginUser);
+        redisCache.setCacheObject(BLOG_LOGIN + userId, loginUser);
 
         // 将user bean拷贝为userInfoVo
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
         // 将token和userInfo封装返回给前端
-        BlogUserLoginVo vo = new BlogUserLoginVo(jwt,userInfoVo);
+        BlogUserLoginVo vo = new BlogUserLoginVo(jwt, userInfoVo);
         return ResponseResult.okResult(vo);
     }
 
@@ -59,7 +62,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         //获取userId
         Long userId = loginUser.getUser().getId();
         //删除redis中的用户信息
-        redisCache.deleteObject("bloglogin:"+userId);
+        redisCache.deleteObject(BLOG_LOGIN + userId);
 
         return ResponseResult.okResult();
     }

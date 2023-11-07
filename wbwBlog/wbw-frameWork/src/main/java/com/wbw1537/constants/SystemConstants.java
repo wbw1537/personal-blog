@@ -26,5 +26,13 @@ public class SystemConstants {
      * 评论类型为友链评论
      */
     public static final String LINK_COMMENT = "1";
+    /**
+     *  redis中文章浏览量的key
+     */
+    public static final String ARTICLE_VIEW_COUNT = "article:viewCount";
+    /**
+     *  redis中用户信息的key
+     */
+    public static final String BLOG_LOGIN = "bloglogin:";
 
 }

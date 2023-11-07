@@ -13,11 +13,13 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    // 文章评论
     @GetMapping("/commentList")
     public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
         return commentService.commentList(SystemConstants.ARTICLE_COMMENT,articleId, pageNum, pageSize);
     }
 
+    // 友链评论
     @GetMapping("/linkCommentList")
     public ResponseResult linkCommentList(Integer pageNum, Integer pageSize) {
         return commentService.commentList(SystemConstants.LINK_COMMENT,null, pageNum, pageSize);
