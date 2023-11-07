@@ -11,6 +11,9 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 5MB
+#  mvc:
+#    pathmatch:
+#      matching-stragety: ANT_PATH_MATCHER
 mybatis-plus:
   configuration:
     # ??
