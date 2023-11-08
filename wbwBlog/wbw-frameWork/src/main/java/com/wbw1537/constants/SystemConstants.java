@@ -34,5 +34,12 @@ public class SystemConstants {
      *  redis中用户信息的key
      */
     public static final String BLOG_LOGIN = "bloglogin:";
+    /**
+     *  系统中root用户的id
+     */
+    public static final Long ROOT_USER_ID = 1L;
 
+    public static final Long NOT_LOGIN_ID = -1L;
+
+    public static final String BACK_GROUND_IMG = "Img:backGroundImg";
 }
