@@ -2,8 +2,11 @@ package com.wbw1537.controller;
 
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.LoginUser;
+import com.wbw1537.domain.entity.Menu;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.AdminUserInfoVo;
+import com.wbw1537.domain.vo.MenuVo;
+import com.wbw1537.domain.vo.RoutersVo;
 import com.wbw1537.domain.vo.UserInfoVo;
 import com.wbw1537.enums.AppHttpCodeEnum;
 import com.wbw1537.exception.SystemException;
@@ -62,5 +65,17 @@ public class AdminLoginController {
         // 封装数据放回
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms,roleKeyList, userInfoVo);
         return ResponseResult.okResult(adminUserInfoVo);
+    }
+
+    @GetMapping("/getRouters")
+    public ResponseResult<RoutersVo> getRouters(){
+        // 获取当前登录的用户
+        Long userId = SecurityUtils.getUserId();
+        // 查询menu 结果是tree的形式
+        List<Menu> menu = menuService.selectRouterTreeByUserId(userId);
+        //封装数据返回
+        RoutersVo routersVo = new RoutersVo(menu);
+        return ResponseResult.okResult(routersVo);
+
     }
 }

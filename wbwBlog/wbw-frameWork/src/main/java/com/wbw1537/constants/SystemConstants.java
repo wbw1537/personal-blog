@@ -57,4 +57,8 @@ public class SystemConstants {
      * 菜单类型为“按钮”
      */
     public static final String BUTTON = "F";
+    /**
+     * 菜单类型为“目录”
+     */
+    public static final String CATALOGUE = "M";
 }

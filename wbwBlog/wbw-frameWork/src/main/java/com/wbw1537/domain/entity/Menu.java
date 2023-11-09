@@ -3,11 +3,14 @@ package com.wbw1537.domain.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -20,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)//启用链式编程
 @TableName("sys_menu")
 public class Menu {
 //菜单ID
@@ -59,6 +63,8 @@ public class Menu {
 
     private String delFlag;
 
+    @TableField(exist = false)
+    private List<Menu> children;
 
     /**
      * 获取主键值

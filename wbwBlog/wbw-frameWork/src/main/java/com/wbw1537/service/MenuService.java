@@ -2,6 +2,7 @@ package com.wbw1537.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.entity.Menu;
+import com.wbw1537.domain.vo.MenuVo;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ import java.util.List;
 public interface MenuService extends IService<Menu> {
 
     List<String> selectPermsByUserId(Long id);
+
+    List<Menu> selectRouterTreeByUserId(Long userId);
 }
