@@ -96,6 +96,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             //通过查询creatBy查询用户名称并赋值
             String nickName = userService.getById(commentVo.getCreateBy()).getNickName();
             commentVo.setNickName(nickName);
+            //通过查询creatBy查询用户头像并赋值
+            String avatar = userService.getById(commentVo.getCreateBy()).getAvatar();
+            commentVo.setAvatar(avatar);
             //如果toCommentUserId不为-1，说明是回复评论，需要查询回复的用户名称并赋值
             //通过toCommentUserId查询用户的名称并赋值
             if (commentVo.getToCommentUserId() != -1) {
