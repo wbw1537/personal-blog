@@ -1,5 +1,6 @@
 package com.wbw1537.controller;
 
+import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.domain.entity.Menu;
@@ -14,6 +15,7 @@ import com.wbw1537.service.AdminLoginService;
 import com.wbw1537.service.MenuService;
 import com.wbw1537.service.RoleService;
 import com.wbw1537.utils.BeanCopyUtils;
+import com.wbw1537.utils.RedisCache;
 import com.wbw1537.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -45,7 +47,7 @@ public class AdminLoginController {
         return adminLoginService.login(user);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/user/logout")
     public ResponseResult logout(){
         return adminLoginService.logout();
     }

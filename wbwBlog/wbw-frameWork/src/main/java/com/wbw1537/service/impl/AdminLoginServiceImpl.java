@@ -12,6 +12,7 @@ import com.wbw1537.service.BlogLoginService;
 import com.wbw1537.utils.BeanCopyUtils;
 import com.wbw1537.utils.JwtUtil;
 import com.wbw1537.utils.RedisCache;
+import com.wbw1537.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,14 +64,10 @@ public class AdminLoginServiceImpl implements AdminLoginService {
 
     @Override
     public ResponseResult logout() {
-        //获取token 解析获取userId
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        //获取userId
-        Long userId = loginUser.getUser().getId();
-        //删除redis中的用户信息
-        redisCache.deleteObject(BLOG_LOGIN + userId);
-
+        // 获取当前登录的用户id
+        Long id = SecurityUtils.getUserId();
+        // 删除redis中对应的token
+        redisCache.deleteObject(SystemConstants.ADMIN_LOGIN + id);
         return ResponseResult.okResult();
     }
 }
