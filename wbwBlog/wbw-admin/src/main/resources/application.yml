@@ -15,3 +15,9 @@ global-config:
     logic-delete-value: 1
     logic-not-delete-value: 0
     id-type: auto
+
+oss:
+    accessKey: 8srRWlH9UNd4FcZwxnU55vLyrtGQKAyBAkjeJ_EF
+    secretKey: l07YS4kPeiDBgdinvGNBSLHsZEqjJ6IwZl9RWDdo
+    bucket: wbw1537-blog
+    domain: http://s3ls1x3d1.hd-bkt.clouddn.com

@@ -5,6 +5,7 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.TagListDto;
 import com.wbw1537.domain.entity.Tag;
 import com.wbw1537.domain.vo.PageVo;
+import com.wbw1537.domain.vo.TagVo;
 
 
 /**
@@ -24,4 +25,7 @@ public interface TagService extends IService<Tag> {
     ResponseResult getTag(Long id);
 
     ResponseResult updateTag(TagListDto tagListDto);
+
+    ResponseResult<TagVo> listAllTag();
+
 }

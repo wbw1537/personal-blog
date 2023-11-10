@@ -4,9 +4,7 @@ import java.util.Date;
 
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("sg_comment")
 public class Comment {
-
+    @TableId(type = IdType.AUTO)
     private Long id;
     //评论类型（0代表文章评论，1代表友链评论）
     private String type;

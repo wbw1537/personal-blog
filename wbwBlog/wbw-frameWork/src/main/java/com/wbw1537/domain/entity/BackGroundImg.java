@@ -1,6 +1,8 @@
 package com.wbw1537.domain.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @TableName("wbw_back_ground_img")
 public class BackGroundImg {
 
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     private Long createBy;

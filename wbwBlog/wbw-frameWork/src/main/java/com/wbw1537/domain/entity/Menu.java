@@ -5,7 +5,9 @@ import java.util.Date;
 import java.io.Serializable;
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)//启用链式编程
 @TableName("sys_menu")
 public class Menu {
+    @TableId(type = IdType.AUTO)
 //菜单ID
     private Long id;
 //菜单名称

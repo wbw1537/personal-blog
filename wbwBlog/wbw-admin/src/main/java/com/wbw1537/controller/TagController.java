@@ -3,6 +3,7 @@ package com.wbw1537.controller;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.TagListDto;
 import com.wbw1537.domain.vo.PageVo;
+import com.wbw1537.domain.vo.TagVo;
 import com.wbw1537.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,11 @@ public class TagController {
     @GetMapping("/list")
     public ResponseResult<PageVo> getTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto){
         return tagService.getTagList(pageNum, pageSize, tagListDto);
+    }
+
+    @GetMapping("/listAllTag")
+    public ResponseResult<TagVo> listAllTag(){
+        return tagService.listAllTag();
     }
 
     @PostMapping

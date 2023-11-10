@@ -4,10 +4,7 @@ import java.util.Date;
 
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -25,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("sg_tag")
 public class Tag {
+    @TableId(type = IdType.AUTO)
 
     private Long id;
 //标签名
