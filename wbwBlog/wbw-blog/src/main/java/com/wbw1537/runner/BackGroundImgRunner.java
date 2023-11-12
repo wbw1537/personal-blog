@@ -25,6 +25,9 @@ public class BackGroundImgRunner implements CommandLineRunner {
         // 查询背景图片url信息
         List<BackGroundImg> backGroundImgList = backGroundImgMapper.selectList(null);
 
+        // 删除redis中图片url
+        redisCache.deleteObject(SystemConstants.BACK_GROUND_IMG);
+
         // 存储到redis中
         redisCache.setCacheList(SystemConstants.BACK_GROUND_IMG,backGroundImgList);
 

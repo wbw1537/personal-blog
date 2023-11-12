@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleTagService articleTagService;
+
+    @Autowired
+    private ArticleMapper articleMapper;
+
     @Override
     public ResponseResult hotArticleList() {
         //查询热门文章 封装成responseResult返回
@@ -135,7 +140,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public ResponseResult addArticle(AddArticleDto articleDto) {
         // 添加博客
         Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
@@ -145,11 +150,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .collect(Collectors.toList());
         // 添加博客-标签表的关联关系
         articleTagService.saveBatch(articleTags);
+        // 将博客的浏览量存入redis
+        updateAllArticleViewCount();
         return ResponseResult.okResult();
     }
 
     public Integer getArticleViewCountById(Long id){
         //获取redis中对应id的浏览量
         return redisCache.getCacheMapValue(SystemConstants.ARTICLE_VIEW_COUNT,id.toString());
+    }
+
+    public void updateAllArticleViewCount(){
+        // 查询博客信息
+        List<Article> articleList = articleMapper.selectList(null);
+        Map<String, Integer> viewCount = articleList.stream().
+                collect(Collectors.toMap(article -> article.getId().toString(),
+                        article -> article.getViewCount().intValue()));
+        // 删除redis中文章浏览量
+        redisCache.deleteObject(SystemConstants.ARTICLE_VIEW_COUNT);
+        // 存储到redis中
+        redisCache.setCacheMap(SystemConstants.ARTICLE_VIEW_COUNT,viewCount);
     }
 }

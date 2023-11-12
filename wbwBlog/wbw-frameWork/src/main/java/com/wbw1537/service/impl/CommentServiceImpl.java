@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Comment;
+import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.CommentVo;
 import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.enums.AppHttpCodeEnum;
@@ -93,11 +94,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private List<CommentVo> toCommentVoList(List<Comment> commentList) {
         List<CommentVo> commentVoList = BeanCopyUtils.copyBeanList(commentList, CommentVo.class);
         for (CommentVo commentVo : commentVoList) {
+            User user = userService.getById(commentVo.getCreateBy());
             //通过查询creatBy查询用户名称并赋值
-            String nickName = userService.getById(commentVo.getCreateBy()).getNickName();
+            String nickName = user.getNickName();
             commentVo.setNickName(nickName);
             //通过查询creatBy查询用户头像并赋值
-            String avatar = userService.getById(commentVo.getCreateBy()).getAvatar();
+            String avatar = user.getAvatar();
             commentVo.setAvatar(avatar);
             //如果toCommentUserId不为-1，说明是回复评论，需要查询回复的用户名称并赋值
             //通过toCommentUserId查询用户的名称并赋值
@@ -106,7 +108,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 commentVo.setToCommentUserName(toCommentUserName);
             }
         }
-
         return commentVoList;
     }
 }

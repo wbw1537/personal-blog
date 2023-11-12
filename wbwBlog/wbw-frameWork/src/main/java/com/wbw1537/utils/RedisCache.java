@@ -246,4 +246,6 @@ public class RedisCache
     public void incrementCacheMapValue(String key,String hKey,Long v){
         redisTemplate.boundHashOps(key).increment(hKey,v);
     }
+
+
 }
