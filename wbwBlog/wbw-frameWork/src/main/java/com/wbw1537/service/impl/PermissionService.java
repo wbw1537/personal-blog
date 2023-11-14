@@ -1,4 +1,4 @@
-package com.wbw1537.service;
+package com.wbw1537.service.impl;
 
 import com.wbw1537.utils.SecurityUtils;
 import org.springframework.stereotype.Service;

@@ -29,6 +29,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     public ResponseResult<PageVo> getTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
+        // 判断pageNum和pageSize是否为空
+        if(pageNum == null || pageSize == null){
+            throw new SystemException(AppHttpCodeEnum.PARAM_INVALID);
+        }
         // 分页查询
         LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
         // 条件查询

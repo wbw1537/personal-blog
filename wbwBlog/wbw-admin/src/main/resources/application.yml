@@ -7,14 +7,14 @@ spring:
         password: Wang123999,.,
 mybatis-plus:
     configuration:
-# ??
+        # ??
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-global-config:
-    db-config:
-    logic-delete-field: delFlag
-    logic-delete-value: 1
-    logic-not-delete-value: 0
-    id-type: auto
+    global-config:
+        db-config:
+            logic-delete-field: delFlag
+            logic-delete-value: 1
+            logic-not-delete-value: 0
+            id-type: auto
 
 oss:
     accessKey: 8srRWlH9UNd4FcZwxnU55vLyrtGQKAyBAkjeJ_EF

@@ -3,11 +3,16 @@ package com.wbw1537.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.constants.SystemConstants;
+import com.wbw1537.domain.ResponseResult;
+import com.wbw1537.domain.dto.AddMenuDto;
 import com.wbw1537.domain.entity.Menu;
+import com.wbw1537.domain.vo.MenuListVo;
 import com.wbw1537.domain.vo.MenuVo;
 import com.wbw1537.mapper.MenuMapper;
 import com.wbw1537.service.MenuService;
+import com.wbw1537.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +62,28 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuTree;
     }
 
-//    private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
+    @Override
+    public ResponseResult getSystemMenuList(String status, String menuName) {
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        // 根据请求条件进行条件查询
+        wrapper.like(StringUtils.hasText(status), Menu::getStatus, status);
+        wrapper.like(StringUtils.hasText(menuName),Menu::getMenuName,menuName);
+        List<Menu> menus = list(wrapper);
+        // 封装数据
+        List<MenuListVo> menuListVos = BeanCopyUtils.copyBeanList(menus, MenuListVo.class);
+        return ResponseResult.okResult(menuListVos);
+    }
+
+    @Override
+    public ResponseResult addSystemMenu(AddMenuDto addMenuDto) {
+        // 封装数据
+        Menu menu = BeanCopyUtils.copyBean(addMenuDto, Menu.class);
+        // 存入数据
+        save(menu);
+        return ResponseResult.okResult();
+    }
+
+    //    private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
 //        menus.stream().filter(menu -> menu.getParentId().equals(parentId))
 //                .forEach(menu -> menu.setChildren(buildMenuTree(menus, menu.getId())));
 //        return menus;

@@ -6,13 +6,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.constants.SystemConstants;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.AddArticleDto;
+import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.entity.ArticleTag;
 import com.wbw1537.domain.entity.Category;
-import com.wbw1537.domain.vo.ArticleDetailVo;
-import com.wbw1537.domain.vo.ArticleListVo;
-import com.wbw1537.domain.vo.HotArticleVo;
-import com.wbw1537.domain.vo.PageVo;
+import com.wbw1537.domain.entity.Tag;
+import com.wbw1537.domain.vo.*;
+import com.wbw1537.enums.AppHttpCodeEnum;
+import com.wbw1537.exception.SystemException;
 import com.wbw1537.mapper.ArticleMapper;
 import com.wbw1537.mapper.ArticleTagMapper;
 import com.wbw1537.mapper.CategoryMapper;
@@ -23,6 +24,7 @@ import com.wbw1537.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -142,7 +144,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    //@Transactional
+    @Transactional
     public ResponseResult addArticle(AddArticleDto articleDto) {
         // 添加博客
         Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
@@ -155,6 +157,84 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 将博客的浏览量存入redis
         updateAllArticleViewCount();
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getArticleList(Integer pageNum, Integer pageSize, String title, String summary) {
+        // 判断pageNum和pageSize是否为空
+        if(pageNum == null || pageSize == null){
+            throw new SystemException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        // 条件查询
+        queryWrapper.like(StringUtils.hasText(title), Article::getTitle, title);
+        queryWrapper.like(StringUtils.hasText(summary),Article::getSummary,summary);
+        // 分页查询
+        Page<Article> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, queryWrapper);
+        // 封装数据
+        List<Article> articleList = page.getRecords();
+        List<ArticleManagementVo> articleManagementVos = BeanCopyUtils.copyBeanList(articleList, ArticleManagementVo.class);
+
+        PageVo pageVo = new PageVo(articleManagementVos,page.getTotal());
+//        List<Article> articleList = (List<Article>) pageVo.getRows().stream().collect(Collectors.toList());
+//        List<ArticleManagementVo> articleManagementVos = BeanCopyUtils.copyBeanList(articleList, ArticleManagementVo.class);
+//        pageVo.setRows(articleManagementVos);
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleForUpdate(Long id) {
+        // 判断id是否为空
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
+        }
+        // 根据id查询文章内容
+        Article article = getById(id);
+        // 从redis中获取viewCount
+        article.setViewCount(getArticleViewCountById(id).longValue());
+        // 转化成vo（借用一下dto）
+        UpdateArticleDto dto = BeanCopyUtils.copyBean(article, UpdateArticleDto.class);
+        // 根据文章id查询标签
+        List<Long> tags = articleTagService.list().stream().filter(articleTag -> articleTag.getArticleId().equals(id))
+                .map(articleTag -> articleTag.getTagId())
+                .collect(Collectors.toList());
+        dto.setTags(tags);
+        // 返回查询结果
+        return ResponseResult.okResult(dto);
+    }
+
+    @Override
+    @Transactional
+    public ResponseResult updateArticle(UpdateArticleDto articleDto) {
+        // 将articleDto中的数据拷贝到article中
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        //删除原有的 标签和博客的关联
+        LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        articleTagLambdaQueryWrapper.eq(ArticleTag::getArticleId,article.getId());
+        articleTagService.remove(articleTagLambdaQueryWrapper);
+        //添加新的博客和标签的关联信息
+        List<ArticleTag> articleTags = articleDto.getTags().stream()
+                .map(tagId -> new ArticleTag(articleDto.getId(), tagId))
+                .collect(Collectors.toList());
+        articleTagService.saveBatch(articleTags);
+        // 存入文章
+        updateById(article);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteArticle(Long id) {
+        // 判断id是否为空
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.PARAM_INVALID);
+        }
+        // 删除文章
+        removeById(id);
+        return null;
     }
 
     public Integer getArticleViewCountById(Long id){
