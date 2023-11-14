@@ -87,6 +87,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.eq(Article::getStatus, ARTICLE_STATUS_NORMAL);
         //筛选置顶文章（对isTop降序排序）
         lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        //根据发布时间对文章进行降序排序
+        lambdaQueryWrapper.orderByDesc(Article::getCreateTime);
         //分页查询
         Page<Article> page = new Page<>(pageNum,pageSize);
         page(page,lambdaQueryWrapper);

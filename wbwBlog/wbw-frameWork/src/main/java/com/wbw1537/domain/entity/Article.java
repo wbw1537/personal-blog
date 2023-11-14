@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("sg_article")
+@TableName("wbw_article")
 @Accessors(chain = true)
 public class Article {
     @TableId(type = IdType.AUTO)

@@ -45,6 +45,8 @@ public class SystemConstants {
 
     public static final Long NOT_LOGIN_ID = -1L;
 
+    public static final String ADMIN = "1";
+
     /**
      * redis 中背景图片的key
      */

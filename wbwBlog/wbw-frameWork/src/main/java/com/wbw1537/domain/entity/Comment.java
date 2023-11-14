@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("sg_comment")
+@TableName("wbw_comment")
 public class Comment {
     @TableId(type = IdType.AUTO)
     private Long id;

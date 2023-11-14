@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("sg_tag")
+@TableName("wbw_tag")
 public class Tag {
     @TableId(type = IdType.AUTO)
 
