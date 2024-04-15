@@ -1,0 +1,32 @@
+server:
+  port: 7777
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sg_blog
+    username: root
+    password: Wang123999,.,
+#  main:
+#    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 5MB
+#  mvc:
+#    pathmatch:
+#      matching-stragety: ANT_PATH_MATCHER
+mybatis-plus:
+  configuration:
+    # ??
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+
+oss:
+  accessKey: 8srRWlH9UNd4FcZwxnU55vLyrtGQKAyBAkjeJ_EF
+  secretKey: l07YS4kPeiDBgdinvGNBSLHsZEqjJ6IwZl9RWDdo
+  bucket: wbw1537-blog
+  domain: http://s3ls1x3d1.hd-bkt.clouddn.com
