@@ -33,6 +33,7 @@ public class CommentVo {
     private Date createTime;
 
     private String nickName;
+    private String avatar;
 
     private List<CommentVo> children;
 }

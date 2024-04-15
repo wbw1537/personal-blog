@@ -31,6 +31,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Autowired
     private ArticleService articleService;
 
+    //注意： ①要求只展示有发布正式文章的分类 ②必须是正常状态的分类
     @Override
     public ResponseResult getCategoryList() {
         //查询已发布文章
@@ -52,5 +53,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         return ResponseResult.okResult(categoryVos);
 
+    }
+
+
+    @Override
+    public ResponseResult listAllCategory() {
+        // 根据分类状态进行查询
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getStatus,SystemConstants.STATUS_NORMAL);
+        // 封装数据
+        List<Category> categories = list(queryWrapper);
+        List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories,CategoryVo.class);
+        return ResponseResult.okResult(categoryVos);
     }
 }

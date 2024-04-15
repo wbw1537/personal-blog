@@ -6,10 +6,13 @@ import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.BlogUserLoginVo;
 import com.wbw1537.domain.vo.UserInfoVo;
+import com.wbw1537.enums.AppHttpCodeEnum;
+import com.wbw1537.exception.SystemException;
 import com.wbw1537.service.BlogLoginService;
 import com.wbw1537.utils.BeanCopyUtils;
 import com.wbw1537.utils.JwtUtil;
 import com.wbw1537.utils.RedisCache;
+import com.wbw1537.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +41,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 判断是否认证通过
         if (Objects.isNull(authenticate)) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new SystemException(AppHttpCodeEnum.LOGIN_ERROR);
         }
         //获取userId生成token
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
@@ -56,11 +59,8 @@ public class BlogLoginServiceImpl implements BlogLoginService {
 
     @Override
     public ResponseResult logout() {
-        //获取token 解析获取userId
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         //获取userId
-        Long userId = loginUser.getUser().getId();
+        Long userId = SecurityUtils.getUserId();
         //删除redis中的用户信息
         redisCache.deleteObject(BLOG_LOGIN + userId);
 

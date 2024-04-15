@@ -33,15 +33,16 @@ public class BackGroundImgServiceImpl extends ServiceImpl<BackGroundImgMapper,Ba
 
     @Override
     public ResponseResult getBackGroundImgList(Long id) {
-        // 根据token判断用户id是否匹配，如id为-1则说明未登录，返回默认图片（我的用户的背景图片）
-        if(!id.equals(SystemConstants.NOT_LOGIN_ID)){
-            Long idFromToken = SecurityUtils.getUserId();
-            if(!idFromToken.equals(id)){
-                throw new SystemException(AppHttpCodeEnum.NO_OPERATOR_AUTH);
-            }
-        } else {
-            id = SystemConstants.ROOT_USER_ID;
-        }
+//        // 根据token判断用户id是否匹配，如id为-1则说明未登录，返回默认图片（我的用户的背景图片）
+//        if(!id.equals(SystemConstants.NOT_LOGIN_ID)){
+//            Long idFromToken = SecurityUtils.getUserId();
+//            if(!idFromToken.equals(id)){
+//                throw new SystemException(AppHttpCodeEnum.NO_OPERATOR_AUTH);
+//            }
+//        } else {
+//            id = SystemConstants.ROOT_USER_ID;
+//        }
+        id = 1L;
         // 根据用户id从redis中获取图片
 //        LambdaQueryWrapper<BackGroundImg> queryWrapper = new LambdaQueryWrapper<>();
 //        queryWrapper.eq(BackGroundImg::getCreateBy,id);

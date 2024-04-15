@@ -12,7 +12,11 @@ public class SecurityUtils
      **/
     public static LoginUser getLoginUser()
     {
-        return (LoginUser) getAuthentication().getPrincipal();
+        Authentication authentication = getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof LoginUser) {
+            return (LoginUser) authentication.getPrincipal();
+        }
+        return null;
     }
 
     /**
@@ -28,6 +32,10 @@ public class SecurityUtils
     }
 
     public static Long getUserId() {
-        return getLoginUser().getUser().getId();
+        LoginUser loginUser = getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            return loginUser.getUser().getId();
+        }
+        return null;
     }
 }
