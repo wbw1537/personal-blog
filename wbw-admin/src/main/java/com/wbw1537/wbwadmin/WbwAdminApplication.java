@@ -1,4 +1,4 @@
-package com.wbw1537;
+package com.wbw1537.wbwadmin;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
