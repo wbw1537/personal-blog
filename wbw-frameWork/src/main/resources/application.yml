@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/wbw_blog?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: Wang123999,.,
+    password: MYSQL.wbw1537@529922
   servlet:
     multipart:
       max-file-size: 2MB
