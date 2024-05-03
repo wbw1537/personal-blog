@@ -27,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest()
 public class ArticleControllerTest {
+  private static final String ACCESS_ARTICLE_API_PATH = "/article/";
+  private static final String ACCESS_HOT_ARTICLE_API_PATH = "/article/hotArticleList/";
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -37,9 +39,7 @@ public class ArticleControllerTest {
   @MockBean
   private ArticleService mockArticleService;
 
-  private static final String ACCESS_ARTICLE_API_PATH = "/article/";
-  private static final String ACCESS_HOT_ARTICLE_API_PATH = "/article/hotArticleList/";
-  @BeforeEach
+    @BeforeEach
   public void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     objectMapper = new ObjectMapper();
