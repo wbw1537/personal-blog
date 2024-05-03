@@ -12,11 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -45,23 +48,23 @@ public class ArticleControllerTest {
   @Test
   public void addArticleShouldReturnResponseOfArticle() throws Exception {
     // Mock some data
-    Article mockArticle = new Article(123L, 123);
-    String json = objectMapper.writeValueAsString(mockArticle);
-    ResponseResult response = ResponseResult.okResult(mockArticle);
+    AddArticleDto articleDto = new AddArticleDto("title","content","summary",1L,"thumbnail","isTop","status","isComment", new ArrayList<>());
+    String json = objectMapper.writeValueAsString(articleDto);
+    ResponseResult response = ResponseResult.okResult(articleDto);
     // Mock the service
-    when(mockArticleService.addArticle(BeanCopyUtils.copyBean(mockArticle, AddArticleDto.class))).thenReturn(response);
+    when(mockArticleService.addArticle(articleDto)).thenReturn(response);
     // Call the controller
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ACCESS_ARTICLE_API_PATH)
-                    .param("article", json))
+    mockMvc.perform(MockMvcRequestBuilders.post(ACCESS_ARTICLE_API_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(json))
         .andExpect(status().isOk())
         .andReturn();
   }
 
   @Test
   public void hotArticleListShouldReturnResponseOfHotArticleList() throws Exception {
-    // Mock the service
     when(mockArticleService.hotArticleList()).thenReturn(ResponseResult.okResult());
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_HOT_ARTICLE_API_PATH))
+    mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_HOT_ARTICLE_API_PATH))
             .andExpect(status().isOk())
             .andReturn();
 
@@ -74,7 +77,7 @@ public class ArticleControllerTest {
     Long mockCategoryId = 123L;
     ResponseResult response = ResponseResult.okResult();
     when(mockArticleService.articleList(mockPageNum, mockPageSize, mockCategoryId)).thenReturn(response);
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_ARTICLE_API_PATH+"articleList")
+    mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_ARTICLE_API_PATH+"articleList")
             .param("pageNum", mockPageNum.toString())
             .param("pageSize", mockPageSize.toString())
             .param("categoryId", mockCategoryId.toString()))
@@ -86,19 +89,20 @@ public class ArticleControllerTest {
     Long mockArticleId = 66L;
     ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
     when(mockArticleService.getArticleDetail(mockArticleId)).thenReturn(response);
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_ARTICLE_API_PATH+mockArticleId))
+    mockMvc.perform(MockMvcRequestBuilders.get(ACCESS_ARTICLE_API_PATH+mockArticleId))
         .andExpect(status().isOk())
         .andReturn();
   }
 
   @Test
   public void updateArticleShouldReturnResponseOfArticle() throws Exception {
-    Article mockArticle = new Article(123L, 123);
-    String json = objectMapper.writeValueAsString(mockArticle);
-    ResponseResult response = ResponseResult.okResult(mockArticle);
-    when(mockArticleService.updateArticle(BeanCopyUtils.copyBean(mockArticle, UpdateArticleDto.class))).thenReturn(response);
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(ACCESS_ARTICLE_API_PATH)
-            .param("article", json))
+    UpdateArticleDto articleDto = new UpdateArticleDto(66L,"title","content","summary",1L,"thumbnail","isTop","status","isComment", new ArrayList<>());
+    String json = objectMapper.writeValueAsString(articleDto);
+    ResponseResult response = ResponseResult.okResult(articleDto);
+    when(mockArticleService.updateArticle(articleDto)).thenReturn(response);
+    mockMvc.perform(MockMvcRequestBuilders.put(ACCESS_ARTICLE_API_PATH)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json))
             .andExpect(status().isOk())
             .andReturn();
   }
@@ -108,7 +112,7 @@ public class ArticleControllerTest {
     Long mockArticleId = 66L;
     ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
     when(mockArticleService.updateViewCount(mockArticleId)).thenReturn(response);
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(ACCESS_ARTICLE_API_PATH+"updateViewCount/"+mockArticleId))
+    mockMvc.perform(MockMvcRequestBuilders.put(ACCESS_ARTICLE_API_PATH+"updateViewCount/"+mockArticleId))
         .andExpect(status().isOk())
         .andReturn();
   }
@@ -118,7 +122,7 @@ public class ArticleControllerTest {
     Long mockArticleId = 66L;
     ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
     when(mockArticleService.deleteArticle(mockArticleId)).thenReturn(response);
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete(ACCESS_ARTICLE_API_PATH+mockArticleId))
+    mockMvc.perform(MockMvcRequestBuilders.delete(ACCESS_ARTICLE_API_PATH+mockArticleId))
         .andExpect(status().isOk())
         .andReturn();
   }
