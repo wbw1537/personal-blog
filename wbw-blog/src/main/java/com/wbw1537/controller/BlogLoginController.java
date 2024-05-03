@@ -1,6 +1,7 @@
 package com.wbw1537.controller;
 
 import com.wbw1537.domain.ResponseResult;
+import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.enums.AppHttpCodeEnum;
 import com.wbw1537.exception.SystemException;
@@ -22,7 +23,7 @@ public class BlogLoginController {
 
     @ApiOperation(value = "User Login")
     @PostMapping("/login")
-    public ResponseResult login(@RequestBody User user){
+    public ResponseResult login(@RequestBody UserLoginDto user){
         if(!StringUtils.hasText(user.getUserName())){
             // Username is required
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
