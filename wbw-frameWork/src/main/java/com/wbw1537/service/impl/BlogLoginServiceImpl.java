@@ -15,6 +15,8 @@ import com.wbw1537.utils.JwtUtil;
 import com.wbw1537.utils.RedisCache;
 import com.wbw1537.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,13 +38,13 @@ public class BlogLoginServiceImpl implements BlogLoginService {
   private RedisCache redisCache;
 
   @Override
-  public ResponseResult login(UserLoginDto user) {
+  public ResponseEntity<BlogUserLoginVo> login(UserLoginDto user) {
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
     // 调用UserDetailsService
     Authentication authenticate = authenticationManager.authenticate(authenticationToken);
     // 判断是否认证通过
     if (Objects.isNull(authenticate)) {
-      throw new SystemException(AppHttpCodeEnum.LOGIN_ERROR);
+      return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
     //获取userId生成token
     LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
@@ -55,16 +57,16 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
     // 将token和userInfo封装返回给前端
     BlogUserLoginVo vo = new BlogUserLoginVo(jwt, userInfoVo);
-    return ResponseResult.okResult(vo);
+    return new ResponseEntity<>(vo, HttpStatus.OK);
   }
 
   @Override
-  public ResponseResult logout() {
+  public ResponseEntity<ResponseResult> logout() {
     //获取userId
     Long userId = SecurityUtils.getUserId();
     //删除redis中的用户信息
     redisCache.deleteObject(BLOG_LOGIN + userId);
 
-    return ResponseResult.okResult();
+    return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
   }
 }

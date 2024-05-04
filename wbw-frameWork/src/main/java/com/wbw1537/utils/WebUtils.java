@@ -16,9 +16,9 @@ public class WebUtils {
      * @param string   待渲染的字符串
      * @return null
      */
-    public static void renderString(HttpServletResponse response, String string) {
+    public static void renderString(HttpServletResponse response, String string, int status) {
         try {
-            response.setStatus(200);
+            response.setStatus(status);
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
             response.getWriter().print(string);

@@ -47,7 +47,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // token超时、token非法
             //响应前端需要重新登陆
             ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
-            WebUtils.renderString(response, JSON.toJSONString(result));
+            WebUtils.renderString(response, JSON.toJSONString(result), result.getCode());
             return;
         }
         String userId = claims.getSubject();
@@ -57,7 +57,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if(Objects.isNull(loginUser)){
             //说明登陆过期 提示重新登录
             ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
-            WebUtils.renderString(response, JSON.toJSONString(result));
+            WebUtils.renderString(response, JSON.toJSONString(result), result.getCode());
             return;
         }
         //存入SecurityContextHolder

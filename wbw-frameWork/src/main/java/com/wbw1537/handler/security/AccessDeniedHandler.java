@@ -20,6 +20,6 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
         accessDeniedException.printStackTrace();
         ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH);
         //响应给前端
-        WebUtils.renderString(response, JSON.toJSONString(result));
+        WebUtils.renderString(response, JSON.toJSONString(result), result.getCode());
     }
 }

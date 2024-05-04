@@ -49,7 +49,7 @@ public class CategoryController {
             e.printStackTrace();
             // 若出现异常，响应json提示
             ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
-            WebUtils.renderString(response, JSON.toJSONString(result));
+            WebUtils.renderString(response, JSON.toJSONString(result),result.getCode());
         }
 
 

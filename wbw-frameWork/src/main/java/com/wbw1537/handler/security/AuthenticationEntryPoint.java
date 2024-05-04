@@ -30,6 +30,6 @@ public class AuthenticationEntryPoint implements org.springframework.security.we
             result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR.getCode(),"认证或授权失败");
         }
         //响应给前端
-        WebUtils.renderString(response, JSON.toJSONString(result));
+        WebUtils.renderString(response, JSON.toJSONString(result), result.getCode());
     }
 }

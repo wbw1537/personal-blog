@@ -3,11 +3,13 @@ package com.wbw1537.service;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.User;
+import com.wbw1537.domain.vo.BlogUserLoginVo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
 public interface BlogLoginService {
-  ResponseResult login(UserLoginDto user);
+  ResponseEntity<BlogUserLoginVo> login(UserLoginDto user);
 
-  ResponseResult logout();
+  ResponseEntity<ResponseResult> logout();
 }
