@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +43,10 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
     // 调用UserDetailsService
     Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
+    // 判断是否认证通过
+    if (Objects.isNull(authenticate)) {
+      throw new BadCredentialsException("Bad Credential!");
+    }
     //获取userId生成token
     LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
     String userId = loginUser.getUser().getId().toString();
