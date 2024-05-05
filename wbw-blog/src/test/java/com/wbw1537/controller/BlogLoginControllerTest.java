@@ -2,6 +2,7 @@ package com.wbw1537.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbw1537.domain.ResponseResult;
+import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.service.BlogLoginService;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,14 +38,14 @@ public class BlogLoginControllerTest {
   }
 
   @Test
-  public void loginWithoutUserNameShouldReturnSystemException() throws Exception {
+  public void loginWithoutUserNameShouldReturnInternalException() throws Exception {
     // Mock some data
-    User user = new User();
-    String json = objectMapper.writeValueAsString(user);
+    UserLoginDto userLoginDto = new UserLoginDto("", "password");
+    String json = objectMapper.writeValueAsString(userLoginDto);
     // Call the controller
     mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
-        .andExpect(status().isOk());
+        .andExpect(status().isInternalServerError());
   }
 }

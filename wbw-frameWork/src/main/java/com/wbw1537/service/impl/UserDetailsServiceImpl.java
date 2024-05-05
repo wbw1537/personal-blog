@@ -7,6 +7,7 @@ import com.wbw1537.domain.entity.User;
 import com.wbw1537.mapper.MenuMapper;
 import com.wbw1537.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,14 +25,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private MenuMapper menuMapper;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws BadCredentialsException {
         // 根据用户名查询用户信息
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserName,username);
         User user = userMapper.selectOne(queryWrapper);
         // 判断是否查到用户，没查到抛出异常
         if(Objects.isNull(user)){
-            throw new RuntimeException("用户不存在");
+            throw new BadCredentialsException("Bad Credential!");
         }
         // 返回用户信息
         if(user.getType().equals(SystemConstants.ADMIN)){
