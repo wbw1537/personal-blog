@@ -10,6 +10,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)//启用链式编程
 public class UserLoginDto {
-  private String userName;
+  private String username;
   private String password;
 }

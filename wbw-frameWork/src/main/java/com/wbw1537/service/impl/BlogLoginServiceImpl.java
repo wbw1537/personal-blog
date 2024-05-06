@@ -1,14 +1,10 @@
 package com.wbw1537.service.impl;
 
-import com.mysql.cj.log.Log;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.LoginUser;
-import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.BlogUserLoginVo;
 import com.wbw1537.domain.vo.UserInfoVo;
-import com.wbw1537.enums.AppHttpCodeEnum;
-import com.wbw1537.exception.SystemException;
 import com.wbw1537.service.BlogLoginService;
 import com.wbw1537.utils.BeanCopyUtils;
 import com.wbw1537.utils.JwtUtil;
@@ -21,10 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Security;
 import java.util.Objects;
 
 import static com.wbw1537.constants.SystemConstants.BLOG_LOGIN;
@@ -40,7 +34,7 @@ public class BlogLoginServiceImpl implements BlogLoginService {
 
   @Override
   public ResponseEntity<BlogUserLoginVo> login(UserLoginDto user) {
-    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
+    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
     // 调用UserDetailsService
     Authentication authenticate = authenticationManager.authenticate(authenticationToken);
     // 判断是否认证通过
@@ -67,7 +61,6 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     Long userId = SecurityUtils.getUserId();
     //删除redis中的用户信息
     redisCache.deleteObject(BLOG_LOGIN + userId);
-
     return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
   }
 }
