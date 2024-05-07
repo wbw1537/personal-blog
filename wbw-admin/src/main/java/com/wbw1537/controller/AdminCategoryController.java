@@ -4,7 +4,6 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Category;
-import com.wbw1537.domain.vo.CategoryVo;
 import com.wbw1537.domain.vo.ExcelCategoryVo;
 import com.wbw1537.enums.AppHttpCodeEnum;
 import com.wbw1537.service.CategoryService;
@@ -16,15 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/content/category")
-public class CategoryController {
+public class AdminCategoryController {
     @Autowired
     private CategoryService categoryService;
 

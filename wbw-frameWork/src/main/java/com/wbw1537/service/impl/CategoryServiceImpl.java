@@ -12,6 +12,8 @@ import com.wbw1537.service.ArticleService;
 import com.wbw1537.service.CategoryService;
 import com.wbw1537.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     //注意： ①要求只展示有发布正式文章的分类 ②必须是正常状态的分类
     @Override
-    public ResponseResult getCategoryList() {
+    public ResponseEntity getCategoryList() {
         //查询已发布文章
         LambdaQueryWrapper<Article> articleLambdaQueryWrapper = new LambdaQueryWrapper<>();
         articleLambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
@@ -51,8 +53,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         //封装vo
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories, CategoryVo.class);
 
-        return ResponseResult.okResult(categoryVos);
-
+        return new ResponseEntity<>(categoryVos, HttpStatus.OK);
     }
 
 

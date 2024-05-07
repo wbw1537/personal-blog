@@ -24,8 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 public class BlogLoginControllerTest {
-  private static final String LOGIN_API_PATH = "/login";
-  private static final String LOGOUT_API_PATH = "/logout";
+
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -46,7 +45,7 @@ public class BlogLoginControllerTest {
     UserLoginDto userLoginDto = BlogTestHelper.USER_LOGIN_DTO_WITHOUT_USERNAME;
     String json = objectMapper.writeValueAsString(userLoginDto);
     // Call the controller
-    mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_API_PATH)
+    mockMvc.perform(MockMvcRequestBuilders.post(BlogTestHelper.LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
         .andExpect(status().is4xxClientError());
@@ -60,7 +59,7 @@ public class BlogLoginControllerTest {
     // Mock the service
     when(mockBlogLoginService.login(userLoginDto)).thenReturn(new ResponseEntity<>(blogUserLoginVo, HttpStatus.OK));
     // Call the controller
-    mockMvc.perform(MockMvcRequestBuilders.post(LOGIN_API_PATH)
+    mockMvc.perform(MockMvcRequestBuilders.post(BlogTestHelper.LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
         .andExpect(status().isOk());
@@ -70,7 +69,7 @@ public class BlogLoginControllerTest {
     // Mock the service
     when(mockBlogLoginService.logout()).thenReturn(new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK));
     // Call the controller
-    mockMvc.perform(MockMvcRequestBuilders.post(LOGOUT_API_PATH))
+    mockMvc.perform(MockMvcRequestBuilders.post(BlogTestHelper.LOGOUT_API_PATH))
         .andExpect(status().isOk());
   }
 }

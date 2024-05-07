@@ -3,6 +3,7 @@ package com.wbw1537.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Category;
+import org.springframework.http.ResponseEntity;
 
 
 /**
@@ -13,7 +14,7 @@ import com.wbw1537.domain.entity.Category;
  */
 public interface CategoryService extends IService<Category> {
 
-    ResponseResult getCategoryList();
+    ResponseEntity getCategoryList();
 
     ResponseResult listAllCategory();
 }
