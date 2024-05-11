@@ -1,4 +1,4 @@
-package com.wbw1537.wbwframework;
+package com.wbw1537;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -22,6 +22,4 @@ public class MenuController {
     public ResponseResult addSystemMenu(@RequestBody AddMenuDto addMenuDto){
         return menuService.addSystemMenu(addMenuDto);
     }
-
-
 }

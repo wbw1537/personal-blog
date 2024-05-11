@@ -3,6 +3,7 @@ package com.wbw1537.controller;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.exception.SystemException;
 import com.wbw1537.service.UploadService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -92,20 +92,6 @@
                 <version>2.9.2</version>
             </dependency>
 
-
-            <!--            <dependency>-->
-            <!--                <groupId>io.springfox</groupId>-->
-            <!--                <artifactId>springfox-boot-starter</artifactId>-->
-            <!--                <version>3.0.0</version>-->
-            <!--            </dependency>-->
-
-            <!--knife4j-->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-                <version>4.3.0</version>
-            </dependency>
-
             <!--            easyexcel-->
             <dependency>
                 <groupId>com.alibaba</groupId>
