@@ -16,5 +16,5 @@ public interface CategoryService extends IService<Category> {
 
     ResponseEntity getCategoryList();
 
-    ResponseResult listAllCategory();
+    ResponseEntity listAllCategory();
 }

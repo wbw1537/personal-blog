@@ -7,6 +7,7 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.vo.CategoryVo;
+import com.wbw1537.mapper.ArticleMapper;
 import com.wbw1537.mapper.CategoryMapper;
 import com.wbw1537.service.ArticleService;
 import com.wbw1537.service.CategoryService;
@@ -31,7 +32,10 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleMapper articleMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
+
 
     //注意： ①要求只展示有发布正式文章的分类 ②必须是正常状态的分类
     @Override
@@ -39,13 +43,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         //查询已发布文章
         LambdaQueryWrapper<Article> articleLambdaQueryWrapper = new LambdaQueryWrapper<>();
         articleLambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
-        List<Article> articleList = articleService.list(articleLambdaQueryWrapper);
+        List<Article> articleList = articleMapper.selectList(articleLambdaQueryWrapper);
         //获取文章分类id（去重）1
         Set<Long> categoryIds = articleList.stream()
                 .map(article -> article.getCategoryId())
                 .collect(Collectors.toSet());
         //根据分类id取得分类名称
-        List<Category> categories = listByIds(categoryIds);
+        List<Category> categories = categoryMapper.selectBatchIds(categoryIds);
 
         categories = categories.stream()
                 .filter(category -> SystemConstants.STATUS_NORMAL.equals(category.getStatus()))
@@ -58,13 +62,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
 
     @Override
-    public ResponseResult listAllCategory() {
+    public ResponseEntity listAllCategory() {
         // 根据分类状态进行查询
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Category::getStatus,SystemConstants.STATUS_NORMAL);
         // 封装数据
-        List<Category> categories = list(queryWrapper);
+        List<Category> categories = categoryMapper.selectList(queryWrapper);
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories,CategoryVo.class);
-        return ResponseResult.okResult(categoryVos);
+        return new ResponseEntity<>(categoryVos, HttpStatus.OK);
     }
 }

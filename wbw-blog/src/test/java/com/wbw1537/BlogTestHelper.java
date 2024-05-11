@@ -3,6 +3,8 @@ package com.wbw1537;
 import com.wbw1537.domain.dto.AddArticleDto;
 import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.dto.UserLoginDto;
+import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.domain.vo.CategoryVo;
@@ -27,4 +29,22 @@ public class BlogTestHelper {
   public static final UserLoginDto USER_LOGIN_DTO_WITHOUT_USERNAME = new UserLoginDto("","password");
   public static final List<CategoryVo> CATEGORY_VO_LIST = new ArrayList<>();
   public static final ResponseEntity<List<CategoryVo>> CATEGORY_VO_LIST_RESPONSE = new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+  public static final Article ARTICLE = new Article(1L,"title","content","summary",1L,"categoryName","thumbnail","isTop","status",1L,"isComment",null,null,null,null,0);
+  public static final Article DELETED_ARTICLE = new Article(2L,"title","content","summary",1L,"categoryName","thumbnail","isTop","status",1L,"isComment",null,null,null,null,1);
+  public static final List<Article> ARTICLE_LIST = getArticleList();
+  public static final Category CATEGORY = new Category(1L,"name",-1L,"description","status",null,null,null,null,0);
+  public static final Category DELETED_CATEGORY = new Category(2L,"name",-1L,"description","status",null,null,null,null,1);
+  public static final List<Category> CATEGORY_LIST = getCategoryList();
+  private static List<Article> getArticleList(){
+    List<Article> articleList = new ArrayList<>();
+    articleList.add(ARTICLE);
+    // articleList.add(DELETED_ARTICLE);
+    return articleList;
+  }
+  private static List<Category> getCategoryList(){
+    List<Category> categories = new ArrayList<>();
+    categories.add(CATEGORY);
+    // categories.add(DELETED_CATEGORY);
+    return categories;
+  }
 }
