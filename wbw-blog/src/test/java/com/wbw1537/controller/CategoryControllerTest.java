@@ -2,6 +2,7 @@ package com.wbw1537.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbw1537.BlogTestHelper;
+import com.wbw1537.WbwBlogApplication;
 import com.wbw1537.service.BlogLoginService;
 import com.wbw1537.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = WbwBlogApplication.class)
 public class CategoryControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;

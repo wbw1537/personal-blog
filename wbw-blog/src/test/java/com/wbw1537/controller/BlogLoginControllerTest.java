@@ -2,6 +2,7 @@ package com.wbw1537.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbw1537.BlogTestHelper;
+import com.wbw1537.WbwBlogApplication;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.vo.BlogUserLoginVo;
@@ -22,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = WbwBlogApplication.class)
 public class BlogLoginControllerTest {
 
 

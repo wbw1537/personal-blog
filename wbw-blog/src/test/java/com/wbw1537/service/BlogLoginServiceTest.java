@@ -1,6 +1,7 @@
 package com.wbw1537.service;
 
 import com.wbw1537.BlogTestHelper;
+import com.wbw1537.WbwBlogApplication;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.utils.RedisCache;
@@ -20,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = WbwBlogApplication.class)
 public class BlogLoginServiceTest {
   @Autowired
   private BlogLoginService blogLoginService;

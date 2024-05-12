@@ -2,6 +2,7 @@ package com.wbw1537.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wbw1537.BlogTestHelper;
+import com.wbw1537.WbwBlogApplication;
 import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.mapper.ArticleMapper;
@@ -17,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = WbwBlogApplication.class)
 public class CategoryServiceTest {
 
   @Autowired
