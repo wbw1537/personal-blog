@@ -3,6 +3,7 @@ package com.wbw1537.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Link;
+import org.springframework.http.ResponseEntity;
 
 
 /**
@@ -13,5 +14,5 @@ import com.wbw1537.domain.entity.Link;
  */
 public interface LinkService extends IService<Link> {
 
-    ResponseResult getAllLink();
+    ResponseEntity getAllLink();
 }

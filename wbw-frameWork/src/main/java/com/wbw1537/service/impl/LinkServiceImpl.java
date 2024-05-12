@@ -9,6 +9,8 @@ import com.wbw1537.domain.vo.LinkVo;
 import com.wbw1537.mapper.LinkMapper;
 import com.wbw1537.service.LinkService;
 import com.wbw1537.utils.BeanCopyUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
     @Override
-    public ResponseResult getAllLink() {
+    public ResponseEntity getAllLink() {
         //查询所以审核通过的链接
         LambdaQueryWrapper<Link> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Link::getStatus, SystemConstants.LINK_STATUS_NORMAL);
@@ -31,6 +33,6 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         //转换vo
         List<LinkVo> linkVo = BeanCopyUtils.copyBeanList(links, LinkVo.class);
         //封装返回
-        return ResponseResult.okResult(linkVo);
+        return new ResponseEntity<>(linkVo, HttpStatus.OK);
     }
 }
