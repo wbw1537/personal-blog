@@ -14,6 +14,8 @@ import com.wbw1537.service.UserService;
 import com.wbw1537.utils.BeanCopyUtils;
 import com.wbw1537.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -31,18 +33,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseResult userInfo() {
+    public ResponseEntity userInfo() {
         // 获取当前用户id
         Long userId = SecurityUtils.getUserId();
         // 根据id查询用户信息
         User user = getById(userId);
         // 封装成userInfoVo
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(user, UserInfoVo.class);
-        return ResponseResult.okResult(userInfoVo);
+        return new ResponseEntity<>(userInfoVo, HttpStatus.OK);
     }
 
     @Override
-    public ResponseResult updateUserInfo(UserInfoDto user) {
+    public ResponseEntity updateUserInfo(UserInfoDto user) {
         // 获取当前用户id
         Long userId = SecurityUtils.getUserId();
         if(userId == user.getId()) {
@@ -52,14 +54,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } else {
             throw new SystemException(AppHttpCodeEnum.NO_OPERATOR_AUTH);
         }
-
-
-
-        return ResponseResult.okResult();
+        return new ResponseEntity(ResponseResult.okResult(), HttpStatus.OK);
     }
 
     @Override
-    public ResponseResult register(User user) {
+    public ResponseEntity register(User user) {
         // 对数据进行非空判断
         if(!StringUtils.hasText(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_NOT_NULL);
@@ -85,7 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(encodePassword);
         // 存入数据库
         save(user);
-        return ResponseResult.okResult();
+        return new ResponseEntity(ResponseResult.okResult(), HttpStatus.OK);
     }
 
     private boolean emailExist(String email) {

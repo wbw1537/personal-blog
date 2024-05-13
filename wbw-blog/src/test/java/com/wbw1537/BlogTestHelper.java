@@ -5,6 +5,7 @@ import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.*;
 import com.wbw1537.domain.vo.CategoryVo;
+import com.wbw1537.domain.vo.UserInfoVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -29,6 +30,8 @@ public class BlogTestHelper {
   public static final String ADD_COMMENT_API_PATH = "/comment";
   public static final String GET_LINK_LIST_API_PATH = "/link/getAllLink";
   public static final String UPLOAD_IMAGE_API_PATH = "/upload";
+  public static final String USER_INFO_API_PATH = "/user/userInfo";
+  public static final String REGISTER_API_PATH = "/user/register";
   public static final AddArticleDto ADD_ARTICLE_DTO = new AddArticleDto("title","content","summary",1L,"thumbnail","isTop","status","isComment", new ArrayList<>());
   public static final UpdateArticleDto UPDATE_ARTICLE_DTO = new UpdateArticleDto(66L,"title","content","summary",1L,"thumbnail","isTop","status","isComment", new ArrayList<>());
   public static final User ADMIN_USER = new User(1L,"userName","nickName","password","1" ,"0" ,"email","phoneNumber","0","avatar",null,null,null,null,0);
@@ -47,7 +50,8 @@ public class BlogTestHelper {
   public static final Comment ARTICLE_COMMENT = new Comment(1L,"0",1L,1L,"content",2L,1L,null,null,null,null,0);
   public static final Comment LINK_COMMENT = new Comment(2L,"1",1L,1L,"content",2L,2L,null,null,null,null,0);
   public static final MockMultipartFile IMG_FILE = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());
-  public static String UPLOAD_RETURN_URL = "http://localhost:8080/upload/2021/07/01/1.jpg";
+  public static final String UPLOAD_RETURN_URL = "http://localhost:8080/upload/2021/07/01/1.jpg";
+
   private static List<Article> getArticleList(){
     List<Article> articleList = new ArrayList<>();
     articleList.add(ARTICLE);
