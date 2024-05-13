@@ -29,34 +29,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ResponseResult.errorResult(e.getCode(),e.getMsg()), HttpStatus.valueOf(e.getCode()));
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ResponseResult> exceptionHandler(Exception e) {
-//        log.error("Error Occurred！{}",e.getMessage());
-//        return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ResponseResult> handleValidationExceptions(IllegalArgumentException illegalArgumentException){
-        // required response syntax: {"code":400,"msg":"Username is required"}
         log.error("Illegal Argument Exception Occurred！{}",illegalArgumentException.getMessage());
         return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.BAD_REQUEST.value(),illegalArgumentException.getMessage()), HttpStatus.BAD_REQUEST);
-        //return new ResponseEntity<>(illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ResponseResult> handleBadCredentialsException(BadCredentialsException badCredentialsException){
-        // required response syntax: {"code":401,"msg":"Bad credentials"}
         log.error("Bad Credentials Exception Occurred！{}",badCredentialsException.getMessage());
-        return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.UNAUTHORIZED.value(),badCredentialsException.getMessage()), HttpStatus.UNAUTHORIZED);
-        //return new ResponseEntity<>(badCredentialsException.getMessage(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.UNAUTHORIZED.value(),badCredentialsException.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InsufficientAuthenticationException.class)
     public ResponseEntity<ResponseResult> handleInsufficientAuthenticationException(InsufficientAuthenticationException insufficientAuthenticationException){
-        // required response syntax: {"code":401,"msg":"Unauthorized"}
         log.error("Insufficient Authentication Exception Occurred！{}",insufficientAuthenticationException.getMessage());
         return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.UNAUTHORIZED.value(),insufficientAuthenticationException.getMessage()), HttpStatus.UNAUTHORIZED);
-        //return new ResponseEntity<>(insufficientAuthenticationException.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
 
