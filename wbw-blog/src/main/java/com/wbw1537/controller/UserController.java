@@ -4,11 +4,14 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.UserInfoDto;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "UserController", description = "User Related APIs")
 @RequestMapping("/user")
 public class UserController {
 
@@ -19,6 +22,7 @@ public class UserController {
         return userService.userInfo();
     }
 
+    @ApiOperation(value = "Update User Info")
     @PutMapping("/userInfo")
     public ResponseEntity updateUserInfo(@RequestBody UserInfoDto user){
         if (user == null){
@@ -27,6 +31,7 @@ public class UserController {
         return userService.updateUserInfo(user);
     }
 
+    @ApiOperation(value = "Register for a User")
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody User user){
         if (user == null){

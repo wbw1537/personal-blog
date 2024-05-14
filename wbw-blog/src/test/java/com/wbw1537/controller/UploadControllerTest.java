@@ -50,8 +50,18 @@ public class UploadControllerTest {
   }
 
   @Test
-  public void uploadNullImageShouldReturnIllegalArgumentException() throws Exception {
+  public void uploadNullImageShouldThrowIllegalArgumentException() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.multipart(BlogTestHelper.UPLOAD_IMAGE_API_PATH))
-        .andExpect(status().is4xxClientError());
+        .andExpect(status().is4xxClientError())
+            .andExpect(result -> result.getResolvedException().getClass().equals(IllegalArgumentException.class));
+  }
+
+  @Test
+  public void uploadImgCatchExceptionShouldReturnInternalServerError() throws Exception {
+    MockMultipartFile file = BlogTestHelper.IMG_FILE;
+    when(mockUploadService.uploadImg(any())).thenThrow(new IllegalArgumentException());
+    mockMvc.perform(MockMvcRequestBuilders.multipart(BlogTestHelper.UPLOAD_IMAGE_API_PATH)
+                    .file("img", file.getBytes()))
+        .andExpect(status().is5xxServerError());
   }
 }
