@@ -22,16 +22,11 @@ public class UploadController {
 
     @ApiOperation(value = "Upload Image")
     @PostMapping("/upload")
-    public ResponseEntity uploadImg(@RequestParam("img") MultipartFile img){
-        try {
-            if (img == null) {
-                throw new IllegalArgumentException("Image is required");
-            }
-            return uploadService.uploadImg(img);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new SystemException(AppHttpCodeEnum.UPLOAD_ERROR);
+    public ResponseEntity<String> uploadImg(@RequestParam("img") MultipartFile img) throws SystemException{
+        if (img == null) {
+            throw new IllegalArgumentException("Image is required");
         }
+        return uploadService.uploadImg(img);
     }
 
 }

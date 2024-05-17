@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UploadService{
-    ResponseEntity uploadImg(MultipartFile img);
+    ResponseEntity<String> uploadImg(MultipartFile img);
 }

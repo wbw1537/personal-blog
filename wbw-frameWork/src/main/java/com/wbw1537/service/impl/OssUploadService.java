@@ -28,13 +28,12 @@ import java.io.InputStream;
 @ConfigurationProperties(prefix = "oss")
 public class OssUploadService implements UploadService {
     @Override
-    public ResponseEntity uploadImg(MultipartFile img) {
+    public ResponseEntity<String> uploadImg(MultipartFile img) {
         // TODO:判断文件类型或者文件大小
         // 获取原始文件名
         String originalFilename = img.getOriginalFilename();
         // 对文件名进行判断
         if ((!originalFilename.endsWith(".png") && !originalFilename.endsWith(".jpg") && !originalFilename.endsWith(".jpeg"))) {
-        //if(!originalFilename.endsWith(".png")){
             throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
         }
         // 如果判断通过，上传文件到oss
