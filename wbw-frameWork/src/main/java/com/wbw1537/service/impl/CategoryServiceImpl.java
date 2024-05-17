@@ -1,5 +1,7 @@
 package com.wbw1537.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.constants.SystemConstants;
@@ -7,16 +9,22 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.vo.CategoryVo;
+import com.wbw1537.domain.vo.ExcelCategoryVo;
+import com.wbw1537.enums.AppHttpCodeEnum;
+import com.wbw1537.exception.SystemException;
 import com.wbw1537.mapper.ArticleMapper;
 import com.wbw1537.mapper.CategoryMapper;
 import com.wbw1537.service.ArticleService;
 import com.wbw1537.service.CategoryService;
 import com.wbw1537.utils.BeanCopyUtils;
+import com.wbw1537.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -70,5 +78,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> categories = categoryMapper.selectList(queryWrapper);
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories,CategoryVo.class);
         return new ResponseEntity<>(categoryVos, HttpStatus.OK);
+    }
+
+    @Override
+    @PreAuthorize("@ps.hasPermission('content:category:export')")
+    public ResponseEntity exportCategory(HttpServletResponse response) {
+        try {
+            // 设置下载文件的请求头
+            WebUtils.setDownLoadHeader("分类.xlsx", response);
+            // 获取需要导出的数据
+            List<Category> category = categoryMapper.selectList(null);
+            // 转换数据类型
+            List<ExcelCategoryVo> excelCategoryVos = BeanCopyUtils.copyBeanList(category, ExcelCategoryVo.class);
+            // 导出数据
+            EasyExcel.write(response.getOutputStream(), ExcelCategoryVo.class).autoCloseStream(Boolean.FALSE).sheet("分类导出").doWrite(excelCategoryVos);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            throw new SystemException(AppHttpCodeEnum.DOWNLOAD_ERROR,e.getMessage());
+        }
     }
 }

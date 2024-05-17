@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-
     @ExceptionHandler(SystemException.class)
     public ResponseEntity<ResponseResult> systemExceptionHandler(SystemException e) {
         // Print Error Messages
-        log.error("System Error Occurred！{}",e.getMsg());
+        log.error("System Error Occurred！{}",e.getLogMsg());
         // Get error message from Exception Object and return
         return new ResponseEntity<>(ResponseResult.errorResult(e.getCode(),e.getMsg()), HttpStatus.valueOf(e.getCode()));
     }
@@ -46,8 +44,4 @@ public class GlobalExceptionHandler {
         log.error("Insufficient Authentication Exception Occurred！{}",insufficientAuthenticationException.getMessage());
         return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.UNAUTHORIZED.value(),insufficientAuthenticationException.getMessage()), HttpStatus.UNAUTHORIZED);
     }
-
-
-
-
 }

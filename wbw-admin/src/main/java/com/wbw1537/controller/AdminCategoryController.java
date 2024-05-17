@@ -34,25 +34,9 @@ public class AdminCategoryController {
         return categoryService.listAllCategory();
     }
 
-    @PreAuthorize("@ps.hasPermission('content:category:export')")
+    @ApiOperation(value = "Export Categories")
     @GetMapping("/export")
-    public void exportCategory(HttpServletResponse response) {
-        try {
-            // 设置下载文件的请求头
-            WebUtils.setDownLoadHeader("分类.xlsx", response);
-            // 获取需要导出的数据
-            List<Category> category = categoryService.list();
-            // 转换数据类型
-            List<ExcelCategoryVo> excelCategoryVos = BeanCopyUtils.copyBeanList(category, ExcelCategoryVo.class);
-            // 导出数据
-            EasyExcel.write(response.getOutputStream(), ExcelCategoryVo.class).autoCloseStream(Boolean.FALSE).sheet("分类导出").doWrite(excelCategoryVos);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 若出现异常，响应json提示
-            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
-            WebUtils.renderString(response, JSON.toJSONString(result),result.getCode());
-        }
-
-
+    public ResponseEntity exportCategory(HttpServletResponse response) {
+        return categoryService.exportCategory(response);
     }
 }
