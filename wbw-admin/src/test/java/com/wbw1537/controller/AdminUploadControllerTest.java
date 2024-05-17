@@ -1,8 +1,8 @@
 package com.wbw1537.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wbw1537.BlogTestHelper;
-import com.wbw1537.WbwBlogApplication;
+import com.wbw1537.AdminBlogTestHelper;
+import com.wbw1537.WbwAdminApplication;
 import com.wbw1537.service.UploadService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +18,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = WbwBlogApplication.class)
-public class UploadControllerTest {
+@SpringBootTest(classes = WbwAdminApplication.class)
+public class AdminUploadControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
   private ObjectMapper objectMapper;
@@ -39,19 +39,19 @@ public class UploadControllerTest {
 
   @Test
   public void uploadImageShouldReturnOkResult() throws Exception {
-    MockMultipartFile file = BlogTestHelper.IMG_FILE;
-    String returnUrl = BlogTestHelper.UPLOAD_RETURN_URL;
+    MockMultipartFile file = AdminBlogTestHelper.IMG_FILE;
+    String returnUrl = AdminBlogTestHelper.UPLOAD_RETURN_URL;
     ResponseEntity response = new ResponseEntity<>(returnUrl, HttpStatus.OK);
     when(mockUploadService.uploadImg(any())).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.multipart(BlogTestHelper.UPLOAD_IMAGE_API_PATH)
+    mockMvc.perform(MockMvcRequestBuilders.multipart(AdminBlogTestHelper.UPLOAD_IMAGE_API_PATH)
                     .file("img", file.getBytes()))
-        .andExpect(status().isOk());
+            .andExpect(status().isOk());
   }
 
   @Test
   public void uploadNullImageShouldThrowIllegalArgumentException() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.multipart(BlogTestHelper.UPLOAD_IMAGE_API_PATH))
-        .andExpect(status().is4xxClientError())
+    mockMvc.perform(MockMvcRequestBuilders.multipart(AdminBlogTestHelper.UPLOAD_IMAGE_API_PATH))
+            .andExpect(status().is4xxClientError())
             .andExpect(result -> result.getResolvedException().getClass().equals(IllegalArgumentException.class));
   }
 }
