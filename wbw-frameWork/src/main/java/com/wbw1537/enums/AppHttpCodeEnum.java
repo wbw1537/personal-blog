@@ -21,7 +21,9 @@ public enum AppHttpCodeEnum {
     NICKNAME_EXIST(421, "昵称已存在"),
     TAG_NAME_NULL(422, "标签名不能为空"),
     TAG_REMARK_NULL(423, "标签备注不能为空"),
-    PARAM_INVALID(402, "参数为空或无效");
+    PARAM_INVALID(402, "参数为空或无效"),
+    UPLOAD_ERROR(503, "上传失败"),
+    DOWNLOAD_ERROR(504, "下载失败");
 
     int code;
     String msg;

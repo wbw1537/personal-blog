@@ -2,6 +2,7 @@ package com.wbw1537.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wbw1537.BlogTestHelper;
+import com.wbw1537.WbwBlogApplication;
 import com.wbw1537.domain.entity.LoginUser;
 import com.wbw1537.domain.entity.User;
 import com.wbw1537.mapper.MenuMapper;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = WbwBlogApplication.class)
 public class UserDetailServiceImplTest {
   @Resource
   UserDetailsServiceImpl userDetailService;

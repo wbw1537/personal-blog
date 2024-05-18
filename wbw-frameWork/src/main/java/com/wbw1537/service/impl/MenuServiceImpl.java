@@ -11,6 +11,9 @@ import com.wbw1537.domain.vo.MenuVo;
 import com.wbw1537.mapper.MenuMapper;
 import com.wbw1537.service.MenuService;
 import com.wbw1537.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -26,11 +29,13 @@ import java.util.stream.Collectors;
  */
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
-    public List<String> selectPermsByUserId(Long id) {
+    public List<String> selectPermsByUserId(Long userId) {
         // 如果是管理员返回所有的权限
-        if (id.equals(SystemConstants.ROOT_USER_ID)) {
+        if (userId.equals(SystemConstants.ROOT_USER_ID)) {
             LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(Menu::getMenuType, SystemConstants.MENU, SystemConstants.BUTTON);
             wrapper.eq(Menu::getStatus, SystemConstants.STATUS_NORMAL);
@@ -41,12 +46,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             return perms;
         }
         // 否则返回或具有的权限
-        return getBaseMapper().selectPermsByUserId(id);
+        return menuMapper.selectPermsByUserId(userId);
     }
 
     @Override
     public List<Menu> selectRouterTreeByUserId(Long userId) {
-        MenuMapper menuMapper = getBaseMapper();
         List<Menu> menus = new ArrayList<>();
         // 判断是否是管理员
         if (userId.equals(SystemConstants.ROOT_USER_ID)) {
@@ -63,7 +67,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public ResponseResult getSystemMenuList(String status, String menuName) {
+    public ResponseEntity getSystemMenuList(String status, String menuName) {
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
         // 根据请求条件进行条件查询
         wrapper.like(StringUtils.hasText(status), Menu::getStatus, status);
@@ -71,23 +75,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<Menu> menus = list(wrapper);
         // 封装数据
         List<MenuListVo> menuListVos = BeanCopyUtils.copyBeanList(menus, MenuListVo.class);
-        return ResponseResult.okResult(menuListVos);
+        return new ResponseEntity<>(menuListVos, HttpStatus.OK);
     }
 
     @Override
-    public ResponseResult addSystemMenu(AddMenuDto addMenuDto) {
+    public ResponseEntity addSystemMenu(AddMenuDto addMenuDto) {
         // 封装数据
         Menu menu = BeanCopyUtils.copyBean(addMenuDto, Menu.class);
         // 存入数据
         save(menu);
-        return ResponseResult.okResult();
+        return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
     }
-
-    //    private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
-//        menus.stream().filter(menu -> menu.getParentId().equals(parentId))
-//                .forEach(menu -> menu.setChildren(buildMenuTree(menus, menu.getId())));
-//        return menus;
-//    }
     private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
         List<Menu> menuTree = menus.stream()
                 .filter(menu -> menu.getParentId().equals(parentId))

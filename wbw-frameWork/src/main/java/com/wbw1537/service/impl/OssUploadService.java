@@ -15,6 +15,8 @@ import com.wbw1537.service.UploadService;
 import com.wbw1537.utils.PathUtils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
@@ -26,19 +28,18 @@ import java.io.InputStream;
 @ConfigurationProperties(prefix = "oss")
 public class OssUploadService implements UploadService {
     @Override
-    public ResponseResult uploadImg(MultipartFile img) {
+    public ResponseEntity<String> uploadImg(MultipartFile img) {
         // TODO:判断文件类型或者文件大小
         // 获取原始文件名
         String originalFilename = img.getOriginalFilename();
         // 对文件名进行判断
         if ((!originalFilename.endsWith(".png") && !originalFilename.endsWith(".jpg") && !originalFilename.endsWith(".jpeg"))) {
-        //if(!originalFilename.endsWith(".png")){
             throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
         }
         // 如果判断通过，上传文件到oss
         String generateFileName = PathUtils.generateFilePath(originalFilename);
         String url = uploadOss(img,generateFileName);
-        return ResponseResult.okResult(url);
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
 

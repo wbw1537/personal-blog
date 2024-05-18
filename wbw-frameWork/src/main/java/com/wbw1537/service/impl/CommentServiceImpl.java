@@ -17,6 +17,8 @@ import com.wbw1537.service.CommentService;
 import com.wbw1537.service.UserService;
 import com.wbw1537.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,7 +40,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseEntity commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
         // 查询对应文章的根评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         // 对articleId进行判断(如果commentType为ARTICLE_COMMENT，说明是文章评论，需要根据articleId查询)
@@ -60,18 +62,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentVo.setChildren(children);
 
         }
-        return ResponseResult.okResult(new PageVo(commentVoList, page.getTotal()));
+        return new ResponseEntity<>(new PageVo(commentVoList, page.getTotal()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseResult addComment(Comment comment) {
-        // 评论内容不能为空
-        if (!StringUtils.hasText(comment.getContent())) {
-            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
-        }
+    public ResponseEntity addComment(Comment comment) {
         // TODO: 可以添加敏感词检测类似功能
         save(comment);
-        return ResponseResult.okResult();
+        return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
     }
 
     /**

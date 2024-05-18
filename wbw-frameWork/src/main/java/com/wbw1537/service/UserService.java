@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.UserInfoDto;
 import com.wbw1537.domain.entity.User;
+import org.springframework.http.ResponseEntity;
 
 
 /**
@@ -14,9 +15,9 @@ import com.wbw1537.domain.entity.User;
  */
 public interface UserService extends IService<User> {
 
-    public ResponseResult userInfo();
+    public ResponseEntity userInfo();
 
-    ResponseResult updateUserInfo(UserInfoDto user);
+    ResponseEntity updateUserInfo(UserInfoDto user);
 
-    ResponseResult register(User user);
+    ResponseEntity register(User user);
 }

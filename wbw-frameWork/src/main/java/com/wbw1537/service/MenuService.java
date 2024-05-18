@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.AddMenuDto;
 import com.wbw1537.domain.entity.Menu;
+import com.wbw1537.domain.vo.MenuListVo;
 import com.wbw1537.domain.vo.MenuVo;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public interface MenuService extends IService<Menu> {
 
     List<Menu> selectRouterTreeByUserId(Long userId);
 
-    ResponseResult getSystemMenuList(String status, String menuName);
+    ResponseEntity getSystemMenuList(String status, String menuName);
 
-    ResponseResult addSystemMenu(AddMenuDto addMenuDto);
+    ResponseEntity addSystemMenu(AddMenuDto addMenuDto);
 }

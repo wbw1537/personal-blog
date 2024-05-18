@@ -3,6 +3,7 @@ package com.wbw1537.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Comment;
+import org.springframework.http.ResponseEntity;
 
 
 /**
@@ -13,7 +14,7 @@ import com.wbw1537.domain.entity.Comment;
  */
 public interface CommentService extends IService<Comment> {
 
-    ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize);
+    ResponseEntity commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize);
 
-    ResponseResult addComment(Comment comment);
+    ResponseEntity addComment(Comment comment);
 }
