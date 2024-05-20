@@ -67,24 +67,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public ResponseEntity getSystemMenuList(String status, String menuName) {
+    public List<MenuListVo> searchSystemMenuList(String status, String menuName) {
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
         // 根据请求条件进行条件查询
         wrapper.like(StringUtils.hasText(status), Menu::getStatus, status);
         wrapper.like(StringUtils.hasText(menuName),Menu::getMenuName,menuName);
         List<Menu> menus = list(wrapper);
         // 封装数据
-        List<MenuListVo> menuListVos = BeanCopyUtils.copyBeanList(menus, MenuListVo.class);
-        return new ResponseEntity<>(menuListVos, HttpStatus.OK);
+        return BeanCopyUtils.copyBeanList(menus, MenuListVo.class);
     }
 
     @Override
-    public ResponseEntity addSystemMenu(AddMenuDto addMenuDto) {
+    public ResponseResult addSystemMenu(AddMenuDto addMenuDto) {
         // 封装数据
         Menu menu = BeanCopyUtils.copyBean(addMenuDto, Menu.class);
         // 存入数据
         save(menu);
-        return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
+        return ResponseResult.okResult();
     }
     private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
         List<Menu> menuTree = menus.stream()

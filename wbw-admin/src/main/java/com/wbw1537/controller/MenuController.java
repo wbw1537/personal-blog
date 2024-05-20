@@ -7,8 +7,11 @@ import com.wbw1537.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Api(tags = "MenuController", description = "Menu APIs")
@@ -20,16 +23,15 @@ public class MenuController {
 
     @ApiOperation(value = "Get System Menu List")
     @GetMapping("/list")
-    public ResponseEntity getSystemMenuList(String status, String menuName){
-        return menuService.getSystemMenuList(status,menuName);
+    public ResponseEntity<List<MenuListVo>> searchSystemMenuList(String status, String menuName){
+        List<MenuListVo> menuListVos = menuService.searchSystemMenuList(status,menuName);
+        return new ResponseEntity<>(menuListVos, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get System Menu List")
     @PostMapping
-    public ResponseEntity addSystemMenu(@RequestBody AddMenuDto addMenuDto){
-        if(addMenuDto == null){
-            throw new IllegalArgumentException("Menu is required");
-        }
-        return menuService.addSystemMenu(addMenuDto);
+    public ResponseEntity<ResponseResult> addSystemMenu(@RequestBody AddMenuDto addMenuDto){
+        ResponseResult result = menuService.addSystemMenu(addMenuDto);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
