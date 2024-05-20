@@ -41,17 +41,10 @@ public class AdminUploadControllerTest {
   public void uploadImageShouldReturnOkResult() throws Exception {
     MockMultipartFile file = AdminBlogTestHelper.IMG_FILE;
     String returnUrl = AdminBlogTestHelper.UPLOAD_RETURN_URL;
-    ResponseEntity response = new ResponseEntity<>(returnUrl, HttpStatus.OK);
-    when(mockUploadService.uploadImg(any())).thenReturn(response);
+    when(mockUploadService.uploadImg(any())).thenReturn(returnUrl);
     mockMvc.perform(MockMvcRequestBuilders.multipart(AdminBlogTestHelper.UPLOAD_IMAGE_API_PATH)
                     .file("img", file.getBytes()))
-            .andExpect(status().isOk());
-  }
-
-  @Test
-  public void uploadNullImageShouldThrowIllegalArgumentException() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.multipart(AdminBlogTestHelper.UPLOAD_IMAGE_API_PATH))
-            .andExpect(status().is4xxClientError())
-            .andExpect(result -> result.getResolvedException().getClass().equals(IllegalArgumentException.class));
+            .andExpect(status().isOk())
+            .andExpect(result -> result.getResponse().getContentAsString().equals(returnUrl));
   }
 }

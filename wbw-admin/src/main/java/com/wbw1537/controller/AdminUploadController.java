@@ -6,6 +6,7 @@ import com.wbw1537.service.UploadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +21,8 @@ public class AdminUploadController {
 
     @ApiOperation(value = "Upload Image")
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImg(@RequestParam("img") MultipartFile img) throws SystemException {
-        if (img == null) {
-            throw new IllegalArgumentException("Image is required");
-        }
-        return uploadService.uploadImg(img);
+    public ResponseEntity<String> uploadImg(@RequestParam("img") MultipartFile img) {
+        String url = uploadService.uploadImg(img);
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 }

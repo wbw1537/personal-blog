@@ -28,7 +28,7 @@ import java.io.InputStream;
 @ConfigurationProperties(prefix = "oss")
 public class OssUploadService implements UploadService {
     @Override
-    public ResponseEntity<String> uploadImg(MultipartFile img) {
+    public String uploadImg(MultipartFile img) {
         // TODO:判断文件类型或者文件大小
         // 获取原始文件名
         String originalFilename = img.getOriginalFilename();
@@ -38,8 +38,7 @@ public class OssUploadService implements UploadService {
         }
         // 如果判断通过，上传文件到oss
         String generateFileName = PathUtils.generateFilePath(originalFilename);
-        String url = uploadOss(img,generateFileName);
-        return new ResponseEntity<>(url, HttpStatus.OK);
+        return uploadOss(img,generateFileName);
     }
 
 
