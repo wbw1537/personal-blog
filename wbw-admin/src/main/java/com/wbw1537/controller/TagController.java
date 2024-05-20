@@ -53,12 +53,14 @@ public class TagController {
         return new ResponseEntity<>(responseResult, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get Tag")
     @GetMapping("/{id}")
     public ResponseEntity<TagDto> getTag(@PathVariable Long id){
         TagDto tag = tagService.getTag(id);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update Tag")
     @PutMapping
     public ResponseEntity<ResponseResult> updateTag(@RequestBody TagDto tagDto){
         ResponseResult responseResult = tagService.updateTag(tagDto);
