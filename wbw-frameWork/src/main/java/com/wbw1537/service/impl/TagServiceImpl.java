@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wbw1537.domain.ResponseResult;
-import com.wbw1537.domain.dto.TagListDto;
+import com.wbw1537.domain.dto.TagDto;
 import com.wbw1537.domain.entity.Tag;
 import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.domain.vo.TagVo;
@@ -28,36 +28,37 @@ import java.util.List;
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
     @Override
-    public ResponseResult<PageVo> getTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
-        // 判断pageNum和pageSize是否为空
-        if(pageNum == null || pageSize == null){
-            throw new SystemException(AppHttpCodeEnum.PARAM_INVALID);
-        }
+    public PageVo searchTag(Integer pageNum, Integer pageSize, TagDto tagDto) {
         // 分页查询
         LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
         // 条件查询
-        queryWrapper.like(StringUtils.hasText(tagListDto.getName()), Tag::getName, tagListDto.getName());
-        queryWrapper.like(StringUtils.hasText(tagListDto.getRemark()), Tag::getRemark, tagListDto.getRemark());
+        queryWrapper.like(StringUtils.hasText(tagDto.getName()), Tag::getName, tagDto.getName());
+        queryWrapper.like(StringUtils.hasText(tagDto.getRemark()), Tag::getRemark, tagDto.getRemark());
         // 分页查询
         Page<Tag> page = new Page<>();
         page.setCurrent(pageNum);
         page.setSize(pageSize);
         page(page, queryWrapper);
-        // 封装数据返回
-        PageVo pageVo = new PageVo(page.getRecords(),page.getTotal());
-        return ResponseResult.okResult(pageVo);
+        return new PageVo(page.getRecords(),page.getTotal());
     }
-
     @Override
-    public ResponseResult addTag(TagListDto tagListDto) {
+    public List<TagVo> listAllTags() {
+        // 查询所有的标签
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Tag::getId, Tag::getName);
+        List<Tag> tags = list(queryWrapper);
+        return BeanCopyUtils.copyBeanList(tags, TagVo.class);
+    }
+    @Override
+    public ResponseResult addTag(TagDto tagDto) {
         // 判断tagListDto中的数据是否为空
-        if(!StringUtils.hasText(tagListDto.getName())){
+        if(!StringUtils.hasText(tagDto.getName())){
             throw new SystemException(AppHttpCodeEnum.TAG_NAME_NULL);
-        } else if(!StringUtils.hasText(tagListDto.getRemark())){
+        } else if(!StringUtils.hasText(tagDto.getRemark())){
             throw new SystemException(AppHttpCodeEnum.TAG_REMARK_NULL);
         }
         // 封装数据
-        Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
+        Tag tag = BeanCopyUtils.copyBean(tagDto, Tag.class);
         save(tag);
         return ResponseResult.okResult();
     }
@@ -75,7 +76,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
-    public ResponseResult getTag(Long id) {
+    public TagDto getTag(Long id) {
         // 判断id是否为空
         if(id == null){
             throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
@@ -83,31 +84,20 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         // 根据id查询对应的数据
         Tag tag = getById(id);
         // 封装数据返回
-        TagListDto tagDto = BeanCopyUtils.copyBean(tag, TagListDto.class);
-        return ResponseResult.okResult(tagDto);
+        return BeanCopyUtils.copyBean(tag, TagDto.class);
     }
 
     @Override
-    public ResponseResult updateTag(TagListDto tagListDto) {
+    public ResponseResult updateTag(TagDto tagDto) {
         // 判断tagListDto中的数据是否为空
-        if(!StringUtils.hasText(tagListDto.getName())){
+        if(!StringUtils.hasText(tagDto.getName())){
             throw new SystemException(AppHttpCodeEnum.TAG_NAME_NULL);
-        } else if(!StringUtils.hasText(tagListDto.getRemark())){
+        } else if(!StringUtils.hasText(tagDto.getRemark())){
             throw new SystemException(AppHttpCodeEnum.TAG_REMARK_NULL);
         }
         // 封装数据
-        Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
+        Tag tag = BeanCopyUtils.copyBean(tagDto, Tag.class);
         updateById(tag);
         return ResponseResult.okResult();
-    }
-
-    @Override
-    public ResponseResult<TagVo> listAllTag() {
-        // 查询所有的标签
-        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(Tag::getId, Tag::getName);
-        List<Tag> tags = list(queryWrapper);
-        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(tags, TagVo.class);
-        return ResponseResult.okResult(tagVos);
     }
 }

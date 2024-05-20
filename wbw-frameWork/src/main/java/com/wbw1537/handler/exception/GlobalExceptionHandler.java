@@ -6,6 +6,7 @@ import com.wbw1537.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,5 +44,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseResult> handleInsufficientAuthenticationException(InsufficientAuthenticationException insufficientAuthenticationException){
         log.error("Insufficient Authentication Exception Occurred！{}",insufficientAuthenticationException.getMessage());
         return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.UNAUTHORIZED.value(),insufficientAuthenticationException.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ResponseResult> handleHttpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException){
+        log.error("Http Message Not Readable Exception Occurred！{}",httpMessageNotReadableException.getMessage());
+        return new ResponseEntity<>(ResponseResult.errorResult(HttpStatus.BAD_REQUEST.value(),httpMessageNotReadableException.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

@@ -2,10 +2,12 @@ package com.wbw1537.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wbw1537.domain.ResponseResult;
-import com.wbw1537.domain.dto.TagListDto;
+import com.wbw1537.domain.dto.TagDto;
 import com.wbw1537.domain.entity.Tag;
 import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.domain.vo.TagVo;
+
+import java.util.List;
 
 
 /**
@@ -15,17 +17,10 @@ import com.wbw1537.domain.vo.TagVo;
  * @since 2023-11-09 11:11:36
  */
 public interface TagService extends IService<Tag> {
-
-    ResponseResult<PageVo> getTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
-
-    ResponseResult addTag(TagListDto tagListDto);
-
+    PageVo searchTag(Integer pageNum, Integer pageSize, TagDto tagDto);
+    ResponseResult addTag(TagDto tagDto);
     ResponseResult deleteTag(Long id);
-
-    ResponseResult getTag(Long id);
-
-    ResponseResult updateTag(TagListDto tagListDto);
-
-    ResponseResult<TagVo> listAllTag();
-
+    TagDto getTag(Long id);
+    ResponseResult updateTag(TagDto tagDto);
+    List<TagVo> listAllTags();
 }

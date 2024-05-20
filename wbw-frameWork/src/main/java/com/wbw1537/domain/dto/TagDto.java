@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagListDto {
+public class TagDto {
     //标签名
     private String name;
     //备注

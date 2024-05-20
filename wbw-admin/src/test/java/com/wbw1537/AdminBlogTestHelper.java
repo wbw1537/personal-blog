@@ -1,14 +1,15 @@
 package com.wbw1537;
 
-import com.wbw1537.domain.dto.AddMenuDto;
+import com.wbw1537.domain.dto.TagDto;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.entity.Menu;
 import com.wbw1537.domain.vo.AdminUserInfoVo;
+import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.domain.vo.RoutersVo;
+import com.wbw1537.domain.vo.TagVo;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class AdminBlogTestHelper {
   public static final String UPLOAD_IMAGE_API_PATH = "/upload";
   public static final String SYSTEM_MENU_LIST_API_PATH = "/system/menu/list";
   public static final String SYSTEM_MENU_API_PATH = "/system/menu";
+  public static final String TAG_LIST_API_PATH = "/content/tag/list";
+  public static final String TAG_LIST_ALL_API_PATH = "/content/tag/listAllTags";
+  public static final String TAG_API_PATH = "/content/tag";
   public static final List<Category> CATEGORY_LIST = getCategoryList();
   public static final Category CATEGORY = new Category(1L,"name",-1L,"description","status",null,null,null,null,0);
   public static final UserLoginDto USER_LOGIN_DTO_WITHOUT_USERNAME = new UserLoginDto("","password");
@@ -33,6 +37,9 @@ public class AdminBlogTestHelper {
   public static final List<String> PERMS = getPerms();
   public static final List<Menu> MENU_LIST = getMenuList();
   public static final Menu MENU = new Menu();
+  public static final TagDto TAG_DTO = new TagDto("name","remark",1L);
+  public static final PageVo SEARCH_TAG_RESULT = new PageVo();
+  public static final List<TagVo> TAG_VO_LIST = new ArrayList<>();
 
 
 
