@@ -21,6 +21,7 @@ import com.wbw1537.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "AdminLoginController", description = "Admin Login APIs")
 @RestController
@@ -42,28 +44,32 @@ public class AdminLoginController {
 
     @ApiOperation(value = "Admin Login")
     @PostMapping("/user/login")
-    public ResponseEntity login(@RequestBody UserLoginDto user){
+    public ResponseEntity<Map<String,String>> login(@RequestBody UserLoginDto user){
         if(!StringUtils.hasText(user.getUsername())){
             throw new IllegalArgumentException("Username is required");
         }
-        return adminLoginService.login(user);
+        Map<String,String> token = adminLoginService.login(user);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Admin Logout")
     @PostMapping("/user/logout")
-    public ResponseEntity logout(){
-        return adminLoginService.logout();
+    public ResponseEntity<ResponseResult> logout(){
+        ResponseResult result = adminLoginService.logout();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get Admin Info")
     @GetMapping("/getInfo")
     public ResponseEntity<AdminUserInfoVo> getInfo(){
-        return adminLoginService.getInfo();
+        AdminUserInfoVo adminUserInfoVo = adminLoginService.getInfo();
+        return new ResponseEntity<>(adminUserInfoVo, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get Routers")
     @GetMapping("/getRouters")
     public ResponseEntity<RoutersVo> getRouters(){
-        return adminLoginService.getRouters();
+        RoutersVo routersVo = adminLoginService.getRouters();
+        return new ResponseEntity<>(routersVo, HttpStatus.OK);
     }
 }

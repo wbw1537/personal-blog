@@ -20,6 +20,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,15 +48,17 @@ public class AdminLoginControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.ADMIN_LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
-            .andExpect(status().is4xxClientError());
+            .andExpect(status().is4xxClientError())
+            .andExpect(result -> result.getResolvedException().equals(new IllegalArgumentException("Username is required")));
   }
   @Test
   public void loginWithUserNameShouldReturnResponseOfUser() throws Exception {
     UserLoginDto userLoginDto = AdminBlogTestHelper.USER_LOGIN_DTO;
     String json = objectMapper.writeValueAsString(userLoginDto);
-    BlogUserLoginVo blogUserLoginVo = new BlogUserLoginVo();
+    Map<String,String> tokenMap = new HashMap<>();
+    tokenMap.put("token","jwt");
     when(mockAdminLoginService.login(userLoginDto))
-            .thenReturn(new ResponseEntity<>(blogUserLoginVo, HttpStatus.OK));
+            .thenReturn(tokenMap);
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.ADMIN_LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
@@ -63,7 +68,7 @@ public class AdminLoginControllerTest {
   public void logoutShouldReturnResponseOfUser() throws Exception {
     // Mock the service
     when(mockAdminLoginService.logout())
-            .thenReturn(new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK));
+            .thenReturn(ResponseResult.okResult());
     // Call the controller
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.LOGOUT_API_PATH))
             .andExpect(status().isOk());
@@ -71,14 +76,14 @@ public class AdminLoginControllerTest {
   @Test
   public void getInfoShouldReturnAdminUserInfoVo() throws Exception {
     when(mockAdminLoginService.getInfo())
-            .thenReturn(new ResponseEntity<>(AdminBlogTestHelper.ADMIN_USER_INFO_VO, HttpStatus.OK));
+            .thenReturn(AdminBlogTestHelper.ADMIN_USER_INFO_VO);
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.GET_INFO_API_PATH))
             .andExpect(status().isOk());
   }
   @Test
   public void getRoutersShouldReturnRoutersVo() throws Exception {
      when(mockAdminLoginService.getRouters())
-             .thenReturn(new ResponseEntity<>(AdminBlogTestHelper.ROUTERS_VO, HttpStatus.OK));
+             .thenReturn(AdminBlogTestHelper.ROUTERS_VO);
      mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.GET_ROUTERS_API_PATH))
              .andExpect(status().isOk());
   }

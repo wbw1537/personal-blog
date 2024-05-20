@@ -48,7 +48,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
     private RoleService roleService;
 
     @Override
-    public ResponseEntity login(UserLoginDto user) {
+    public Map<String,String> login(UserLoginDto user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         // 调用UserDetailsService
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
@@ -68,20 +68,20 @@ public class AdminLoginServiceImpl implements AdminLoginService {
 //        // 将token和userInfo封装返回给前端
 //        BlogUserLoginVo vo = new BlogUserLoginVo(jwt, userInfoVo);
         //将token封装返回
-        Map<String,String>map = new HashMap<>();
+        Map<String,String> map = new HashMap<>();
         map.put("token",jwt);
-        return new ResponseEntity(map, HttpStatus.OK);
+        return map;
     }
     @Override
-    public ResponseEntity logout() {
+    public ResponseResult logout() {
         // 获取当前登录的用户id
         Long id = SecurityUtils.getUserId();
         // 删除redis中对应的token
         redisCache.deleteObject(SystemConstants.ADMIN_LOGIN + id);
-        return new ResponseEntity<>(ResponseResult.okResult(), HttpStatus.OK);
+        return ResponseResult.okResult();
     }
     @Override
-    public ResponseEntity<AdminUserInfoVo> getInfo() {
+    public AdminUserInfoVo getInfo() {
         // 获取当前登录的用户
         LoginUser loginUser = SecurityUtils.getLoginUser();
         // 根据用户id查询权限信息
@@ -93,18 +93,16 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         User user = loginUser.getUser();
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(user,UserInfoVo.class);
         // 封装数据放回
-        AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms,roleKeyList, userInfoVo);
-        return new ResponseEntity<>(adminUserInfoVo, HttpStatus.OK);
+        return new AdminUserInfoVo(perms,roleKeyList, userInfoVo);
     }
     @Override
-    public ResponseEntity<RoutersVo> getRouters() {
+    public RoutersVo getRouters() {
         // 获取当前登录的用户
         Long userId = SecurityUtils.getUserId();
         // 查询menu 结果是tree的形式
         List<Menu> menu = menuService.selectRouterTreeByUserId(userId);
         //封装数据返回
-        RoutersVo routersVo = new RoutersVo(menu);
-        return new ResponseEntity<>(routersVo, HttpStatus.OK);
+        return new RoutersVo(menu);
     }
 
 }

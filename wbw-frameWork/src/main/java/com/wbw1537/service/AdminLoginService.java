@@ -7,9 +7,11 @@ import com.wbw1537.domain.vo.AdminUserInfoVo;
 import com.wbw1537.domain.vo.RoutersVo;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 public interface AdminLoginService {
-    ResponseEntity login(UserLoginDto user);
-    ResponseEntity logout();
-    ResponseEntity<AdminUserInfoVo> getInfo();
-    ResponseEntity<RoutersVo> getRouters();
+    Map<String,String> login(UserLoginDto user);
+    ResponseResult logout();
+    AdminUserInfoVo getInfo();
+    RoutersVo getRouters();
 }
