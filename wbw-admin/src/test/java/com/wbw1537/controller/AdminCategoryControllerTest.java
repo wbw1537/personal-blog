@@ -55,7 +55,8 @@ public class AdminCategoryControllerTest {
             .thenReturn(categoryVos);
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.LIST_ALL_CATEGORY_API_PATH))
         .andExpect(status().isOk())
-            .andExpect(result -> categoryVos.equals(result.getResponse()));
+            .andExpect(result -> categoryVos.equals(result.getResponse()))
+            .andReturn();
   }
 
   @Test
@@ -63,6 +64,7 @@ public class AdminCategoryControllerTest {
     when(mockCategoryService.exportCategory(any()))
             .thenReturn(ResponseResult.okResult());
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.EXPORT_CATEGORY_API_PATH))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andReturn();
   }
 }

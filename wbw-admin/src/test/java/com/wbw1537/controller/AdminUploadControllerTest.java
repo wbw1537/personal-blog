@@ -45,6 +45,7 @@ public class AdminUploadControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.multipart(AdminBlogTestHelper.UPLOAD_IMAGE_API_PATH)
                     .file("img", file.getBytes()))
             .andExpect(status().isOk())
-            .andExpect(result -> result.getResponse().getContentAsString().equals(returnUrl));
+            .andExpect(result -> result.getResponse().getContentAsString().equals(returnUrl))
+            .andReturn();
   }
 }

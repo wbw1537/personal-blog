@@ -5,21 +5,26 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.AddArticleDto;
 import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.vo.ArticleDetailVo;
+import com.wbw1537.domain.vo.HotArticleVo;
+import com.wbw1537.domain.vo.PageVo;
+
+import java.util.List;
 
 public interface ArticleService extends IService<Article> {
-    ResponseResult hotArticleList();
+    List<HotArticleVo> hotArticleList();
 
-    ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId);
+    PageVo articleList(Integer pageNum, Integer pageSize, Long categoryId);
 
-    ResponseResult getArticleDetail(Long id);
+    ArticleDetailVo getArticleDetail(Long id);
 
     ResponseResult updateViewCount(Long id);
 
     ResponseResult addArticle(AddArticleDto articleDto);
 
-    ResponseResult getArticleList(Integer pageNum, Integer pageSize, String title, String summary);
+    PageVo searchArticleList(Integer pageNum, Integer pageSize, String title, String summary);
 
-    ResponseResult getArticleForUpdate(Long id);
+    UpdateArticleDto getArticleForUpdate(Long id);
 
     ResponseResult updateArticle(UpdateArticleDto articleDto);
 

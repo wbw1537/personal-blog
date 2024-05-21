@@ -49,7 +49,8 @@ public class AdminLoginControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().is4xxClientError())
-            .andExpect(result -> result.getResolvedException().equals(new IllegalArgumentException("Username is required")));
+            .andExpect(result -> result.getResolvedException().equals(new IllegalArgumentException("Username is required")))
+            .andReturn();
   }
   @Test
   public void loginWithUserNameShouldReturnResponseOfUser() throws Exception {
@@ -62,7 +63,9 @@ public class AdminLoginControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.ADMIN_LOGIN_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(result -> tokenMap.equals(result.getResponse()))
+            .andReturn();
   }
   @Test
   public void logoutShouldReturnResponseOfUser() throws Exception {
@@ -71,20 +74,23 @@ public class AdminLoginControllerTest {
             .thenReturn(ResponseResult.okResult());
     // Call the controller
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.LOGOUT_API_PATH))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
   @Test
   public void getInfoShouldReturnAdminUserInfoVo() throws Exception {
     when(mockAdminLoginService.getInfo())
             .thenReturn(AdminBlogTestHelper.ADMIN_USER_INFO_VO);
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.GET_INFO_API_PATH))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
   @Test
   public void getRoutersShouldReturnRoutersVo() throws Exception {
      when(mockAdminLoginService.getRouters())
              .thenReturn(AdminBlogTestHelper.ROUTERS_VO);
      mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.GET_ROUTERS_API_PATH))
-             .andExpect(status().isOk());
+             .andExpect(status().isOk())
+              .andReturn();
   }
 }

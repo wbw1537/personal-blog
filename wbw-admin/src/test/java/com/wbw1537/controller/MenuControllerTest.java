@@ -61,6 +61,7 @@ public class MenuControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.SYSTEM_MENU_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(mockMenu)))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
 }

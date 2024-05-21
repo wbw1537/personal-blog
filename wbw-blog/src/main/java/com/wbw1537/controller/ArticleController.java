@@ -4,10 +4,16 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.AddArticleDto;
 import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.vo.ArticleDetailVo;
+import com.wbw1537.domain.vo.HotArticleVo;
+import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.service.ArticleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,46 +25,35 @@ public class ArticleController {
   @Autowired
   private ArticleService articleService;
 
-  @ApiOperation(value = "Add Article")
-  @PostMapping
-  public ResponseResult addArticle(@RequestBody AddArticleDto articleDto) {
-    return articleService.addArticle(articleDto);
-  }
-
   @ApiOperation(value = "Get Hot Articles")
   @GetMapping("/hotArticleList")
-  public ResponseResult hotArticleList() {
-    return articleService.hotArticleList();
+  public ResponseEntity<List<HotArticleVo>> hotArticleList() {
+    List<HotArticleVo> hotArticleVoList = articleService.hotArticleList();
+    return new ResponseEntity<>(hotArticleVoList, HttpStatus.OK);
   }
 
   @ApiOperation(value = "Get Article List")
   @GetMapping("/articleList")
-  public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
-    return articleService.articleList(pageNum, pageSize, categoryId);
+  public ResponseEntity<PageVo> articleList(Integer pageNum, Integer pageSize, Long categoryId) {
+    if (pageNum == null || pageSize == null) {
+      throw new IllegalArgumentException("Page Num and Page Size are Required!");
+    }
+    PageVo articlePageVo = articleService.articleList(pageNum, pageSize, categoryId);
+    return new ResponseEntity<>(articlePageVo, HttpStatus.OK);
   }
 
   @ApiOperation(value = "Get Article Details by ID")
   @GetMapping("/{id}")
-  public ResponseResult getArticleDetail(@PathVariable("id") Long id) {
-    return articleService.getArticleDetail(id);
-  }
-
-  @ApiOperation(value = "Update Article")
-  @PutMapping
-  public ResponseResult updateArticle(@RequestBody UpdateArticleDto articleDto) {
-    return articleService.updateArticle(articleDto);
+  public ResponseEntity<ArticleDetailVo> getArticleDetail(@PathVariable("id") Long id) {
+    ArticleDetailVo articleDetailVo = articleService.getArticleDetail(id);
+    return new ResponseEntity<>(articleDetailVo, HttpStatus.OK);
   }
 
   @ApiOperation(value = "Update Article View Count by ID")
   @PutMapping("/updateViewCount/{id}")
-  public ResponseResult updateViewCount(@PathVariable Long id) {
-    return articleService.updateViewCount(id);
-  }
-
-  @ApiOperation(value = "Delete Article by ID")
-  @DeleteMapping("/{id}")
-  public ResponseResult deleteArticle(@PathVariable Long id) {
-    return articleService.deleteArticle(id);
+  public ResponseEntity updateViewCount(@PathVariable Long id) {
+    ResponseResult result = articleService.updateViewCount(id);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
 }

@@ -41,7 +41,9 @@ public class TagControllerTest {
   public void searchTagWithoutParamShouldReturnBadRequest() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.TAG_LIST_API_PATH))
             .andExpect(result -> assertTrue(result.getResolvedException()
-                    instanceof IllegalArgumentException));
+                    instanceof IllegalArgumentException))
+            .andExpect(status().isBadRequest())
+            .andReturn();
   }
   @Test
   public void searchTagShouldReturnOkResult() throws Exception {
@@ -55,7 +57,8 @@ public class TagControllerTest {
                     .param("remark", "remark")
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(result -> AdminBlogTestHelper.SEARCH_TAG_RESULT.equals(result.getResponse()));
+            .andExpect(result -> AdminBlogTestHelper.SEARCH_TAG_RESULT.equals(result.getResponse()))
+            .andReturn();
   }
   @Test
   public void listAllTagsShouldReturnOkResult() throws Exception {
@@ -64,7 +67,8 @@ public class TagControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.TAG_LIST_ALL_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(result -> AdminBlogTestHelper.TAG_VO_LIST.equals(result.getResponse()));
+            .andExpect(result -> AdminBlogTestHelper.TAG_VO_LIST.equals(result.getResponse()))
+            .andReturn();
   }
   @Test
   public void addTagShouldReturnOkResult() throws Exception {
@@ -75,7 +79,8 @@ public class TagControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.post(AdminBlogTestHelper.TAG_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
   @Test
   public void deleteTagShouldReturnOkResult() throws Exception {
@@ -84,7 +89,8 @@ public class TagControllerTest {
             .thenReturn(ResponseResult.okResult());
     mockMvc.perform(MockMvcRequestBuilders.delete(AdminBlogTestHelper.TAG_API_PATH + "/" + id)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
   @Test
   public void getTagShouldReturnOkResult() throws Exception {
@@ -94,7 +100,8 @@ public class TagControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.TAG_API_PATH + "/" + id)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(result -> AdminBlogTestHelper.TAG_DTO.equals(result.getResponse()));
+            .andExpect(result -> AdminBlogTestHelper.TAG_DTO.equals(result.getResponse()))
+            .andReturn();
   }
   @Test
   public void updateTagShouldReturnOkResult() throws Exception {
@@ -105,6 +112,7 @@ public class TagControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.put(AdminBlogTestHelper.TAG_API_PATH)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
   }
 }

@@ -7,7 +7,11 @@ import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.dto.AddArticleDto;
 import com.wbw1537.domain.dto.UpdateArticleDto;
 import com.wbw1537.domain.entity.Article;
+import com.wbw1537.domain.vo.ArticleDetailVo;
+import com.wbw1537.domain.vo.HotArticleVo;
+import com.wbw1537.domain.vo.PageVo;
 import com.wbw1537.service.ArticleService;
+import com.wbw1537.utils.BeanCopyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,28 +47,22 @@ public class ArticleControllerTest {
   }
 
   @Test
-  public void addArticleShouldReturnResponseOfArticle() throws Exception {
-    // Mock some data
-    AddArticleDto articleDto = BlogTestHelper.ADD_ARTICLE_DTO;
-    String json = objectMapper.writeValueAsString(articleDto);
-    ResponseResult response = ResponseResult.okResult(articleDto);
-    // Mock the service
-    when(mockArticleService.addArticle(articleDto)).thenReturn(response);
-    // Call the controller
-    mockMvc.perform(MockMvcRequestBuilders.post(BlogTestHelper.ARTICLE_API_PATH)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(json))
-        .andExpect(status().isOk())
-        .andReturn();
+  public void hotArticleListShouldReturnResponseOfHotArticleList() throws Exception {
+    List<Article> articleList = BlogTestHelper.ARTICLE_LIST;
+    List<HotArticleVo> hotArticleVoList = BeanCopyUtils.copyBeanList(articleList, HotArticleVo.class);
+    when(mockArticleService.hotArticleList()).thenReturn(hotArticleVoList);
+    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.HOT_ARTICLE_API_PATH))
+            .andExpect(status().isOk())
+            .andExpect(result -> hotArticleVoList.equals(result.getResponse()))
+            .andReturn();
   }
 
   @Test
-  public void hotArticleListShouldReturnResponseOfHotArticleList() throws Exception {
-    when(mockArticleService.hotArticleList()).thenReturn(ResponseResult.okResult());
-    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.HOT_ARTICLE_API_PATH))
-            .andExpect(status().isOk())
+  public void articleListWithoutPageNumAndPageSizeShouldThrowException() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.ARTICLE_LIST_API_PATH))
+            .andExpect(status().isBadRequest())
+            .andExpect(result -> result.getResolvedException().getClass().equals(IllegalArgumentException.class))
             .andReturn();
-
   }
 
   @Test
@@ -70,56 +70,37 @@ public class ArticleControllerTest {
     Integer mockPageNum = 1;
     Integer mockPageSize = 10;
     Long mockCategoryId = 123L;
-    ResponseResult response = ResponseResult.okResult();
-    when(mockArticleService.articleList(mockPageNum, mockPageSize, mockCategoryId)).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.ARTICLE_API_PATH +"articleList")
-            .param("pageNum", mockPageNum.toString())
-            .param("pageSize", mockPageSize.toString())
-            .param("categoryId", mockCategoryId.toString()))
+    PageVo articleListPageVo = new PageVo(BlogTestHelper.ARTICLE_LIST, mockPageSize.longValue());
+    when(mockArticleService.articleList(mockPageNum, mockPageSize, mockCategoryId))
+            .thenReturn(articleListPageVo);
+    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.ARTICLE_LIST_API_PATH)
+                    .param("pageNum", mockPageNum.toString())
+                    .param("pageSize", mockPageSize.toString())
+                    .param("categoryId", mockCategoryId.toString()))
             .andExpect(status().isOk())
+            .andExpect(result -> articleListPageVo.equals(result.getResponse()))
             .andReturn();
-  }
-  @Test
-  public void getArticleDetailShouldReturnResponseOfArticle() throws Exception {
-    Long mockArticleId = 66L;
-    ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
-    when(mockArticleService.getArticleDetail(mockArticleId)).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.ARTICLE_API_PATH +mockArticleId))
-        .andExpect(status().isOk())
-        .andReturn();
   }
 
   @Test
-  public void updateArticleShouldReturnResponseOfArticle() throws Exception {
-    UpdateArticleDto articleDto = BlogTestHelper.UPDATE_ARTICLE_DTO;
-    String json = objectMapper.writeValueAsString(articleDto);
-    ResponseResult response = ResponseResult.okResult(articleDto);
-    when(mockArticleService.updateArticle(articleDto)).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.put(BlogTestHelper.ARTICLE_API_PATH)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(json))
+  public void getArticleDetailShouldReturnResponseOfArticle() throws Exception {
+    Article article = BlogTestHelper.ARTICLE;
+    ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article,ArticleDetailVo.class);
+    when(mockArticleService.getArticleDetail(articleDetailVo.getId()))
+            .thenReturn(articleDetailVo);
+    mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.ARTICLE_API_PATH + "/" + articleDetailVo.getId()))
             .andExpect(status().isOk())
+            .andExpect(result -> articleDetailVo.equals(result.getResponse()))
             .andReturn();
   }
 
   @Test
   public void updateViewCountShouldReturnResponseOfArticle() throws Exception {
     Long mockArticleId = 66L;
-    ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
+    ResponseResult response = ResponseResult.okResult();
     when(mockArticleService.updateViewCount(mockArticleId)).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.put(BlogTestHelper.ARTICLE_API_PATH +"updateViewCount/"+mockArticleId))
-        .andExpect(status().isOk())
-        .andReturn();
+    mockMvc.perform(MockMvcRequestBuilders.put(BlogTestHelper.UPDATE_VIEW_COUNT_API_PATH + "/" + mockArticleId))
+            .andExpect(status().isOk())
+            .andReturn();
   }
-
-  @Test
-  public void deleteArticleShouldReturnResponseOfArticle() throws Exception {
-    Long mockArticleId = 66L;
-    ResponseResult response = ResponseResult.okResult(new Article(mockArticleId,123));
-    when(mockArticleService.deleteArticle(mockArticleId)).thenReturn(response);
-    mockMvc.perform(MockMvcRequestBuilders.delete(BlogTestHelper.ARTICLE_API_PATH +mockArticleId))
-        .andExpect(status().isOk())
-        .andReturn();
-  }
-
 }
