@@ -17,6 +17,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class BlogTestHelper {
@@ -39,14 +41,15 @@ public class BlogTestHelper {
   public static final UserLoginDto USER_LOGIN_DTO = new UserLoginDto("userName","password");
   public static final LoginUser LOGIN_USER = new LoginUser(BlogTestHelper.NORMAL_USER, new ArrayList<>());
   public static final UserLoginDto USER_LOGIN_DTO_WITHOUT_USERNAME = new UserLoginDto("", "password");
-  public static final List<CategoryVo> CATEGORY_VO_LIST = new ArrayList<>();
-  public static final ResponseEntity<List<CategoryVo>> CATEGORY_VO_LIST_RESPONSE = new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+  public static final List<Category> CATEGORY_LIST = Arrays.asList(
+          new Category(1L,"name",-1L,"description","status",1L,new Date(),1L,new Date(),0),
+          new Category(2L,"name",-1L,"description","status",2L,new Date(),2L,new Date(),0)
+  );
   public static final Article ARTICLE = new Article(1L,"title","content","summary",1L,"categoryName","thumbnail","isTop","status",1L,"isComment",null,null,null,null,0);
   public static final Article DELETED_ARTICLE = new Article(2L,"title","content","summary",1L,"categoryName","thumbnail","isTop","status",1L,"isComment",null,null,null,null,1);
   public static final List<Article> ARTICLE_LIST = getArticleList();
   public static final Category CATEGORY = new Category(1L,"name",-1L,"description","status",null,null,null,null,0);
   public static final Category DELETED_CATEGORY = new Category(2L,"name",-1L,"description","status",null,null,null,null,1);
-  public static final List<Category> CATEGORY_LIST = getCategoryList();
   public static final Comment ARTICLE_COMMENT = new Comment(1L,"0",1L,1L,"content",2L,1L,null,null,null,null,0);
   public static final Comment LINK_COMMENT = new Comment(2L,"1",1L,1L,"content",2L,2L,null,null,null,null,0);
   public static final MockMultipartFile IMG_FILE = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test data".getBytes());

@@ -41,8 +41,7 @@ public class UploadControllerTest {
   public void uploadImageShouldReturnOkResult() throws Exception {
     MockMultipartFile file = BlogTestHelper.IMG_FILE;
     String returnUrl = BlogTestHelper.UPLOAD_RETURN_URL;
-    ResponseEntity response = new ResponseEntity<>(returnUrl, HttpStatus.OK);
-    when(mockUploadService.uploadImg(any())).thenReturn(response);
+    when(mockUploadService.uploadImg(any())).thenReturn(returnUrl);
     mockMvc.perform(MockMvcRequestBuilders.multipart(BlogTestHelper.UPLOAD_IMAGE_API_PATH)
                     .file("img", file.getBytes()))
         .andExpect(status().isOk());

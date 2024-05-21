@@ -3,8 +3,10 @@ package com.wbw1537.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbw1537.BlogTestHelper;
 import com.wbw1537.WbwBlogApplication;
+import com.wbw1537.domain.vo.CategoryVo;
 import com.wbw1537.service.BlogLoginService;
 import com.wbw1537.service.CategoryService;
+import com.wbw1537.utils.BeanCopyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,8 +40,10 @@ public class CategoryControllerTest {
 
   @Test
   public void getCategoryListShouldReturnOkResult() throws Exception {
-    when(mockCategoryService.getCategoryList()).thenReturn(BlogTestHelper.CATEGORY_VO_LIST_RESPONSE);
+    List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(BlogTestHelper.CATEGORY_LIST,CategoryVo.class);
+    when(mockCategoryService.getCategoryList()).thenReturn(categoryVos);
     mockMvc.perform(MockMvcRequestBuilders.get(BlogTestHelper.GET_CATEGORY_LIST_API_PATH))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+            .andExpect(result -> categoryVos.equals(result.getResponse()));
   }
 }

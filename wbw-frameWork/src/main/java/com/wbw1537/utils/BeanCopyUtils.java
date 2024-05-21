@@ -2,11 +2,12 @@ package com.wbw1537.utils;
 
 import com.wbw1537.domain.entity.Article;
 import com.wbw1537.domain.vo.HotArticleVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class BeanCopyUtils {
 
     private BeanCopyUtils(){
@@ -21,7 +22,7 @@ public class BeanCopyUtils {
             BeanUtils.copyProperties(source, result);
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error occurred in BeanCopyUtils! {}", e.getMessage());
         }
         //返回bean拷贝对象
         return result;
@@ -32,13 +33,4 @@ public class BeanCopyUtils {
                 .map(o -> copyBean(o,clazz))
                 .collect(Collectors.toList());
     }
-
-//    public static void main(String[] args) {
-//        Article article = new Article();
-//        article.setId(1L);
-//        article.setTitle("schema");
-//
-//        HotArticleVo hotArticleVo = copyBean(article, HotArticleVo.class);
-//        System.out.println(hotArticleVo);
-//    }
 }

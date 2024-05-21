@@ -26,7 +26,8 @@ public class UploadController {
         if (img == null) {
             throw new IllegalArgumentException("Image is required");
         }
-        return uploadService.uploadImg(img);
+        String url = uploadService.uploadImg(img);
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
 }

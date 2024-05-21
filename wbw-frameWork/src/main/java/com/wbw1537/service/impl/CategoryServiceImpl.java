@@ -47,7 +47,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     //注意： ①要求只展示有发布正式文章的分类 ②必须是正常状态的分类
     @Override
-    public ResponseEntity getCategoryList() {
+    public List<CategoryVo> getCategoryList() {
         //查询已发布文章
         LambdaQueryWrapper<Article> articleLambdaQueryWrapper = new LambdaQueryWrapper<>();
         articleLambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
@@ -63,26 +63,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .filter(category -> SystemConstants.STATUS_NORMAL.equals(category.getStatus()))
                 .collect(Collectors.toList());
         //封装vo
-        List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories, CategoryVo.class);
-
-        return new ResponseEntity<>(categoryVos, HttpStatus.OK);
+        return BeanCopyUtils.copyBeanList(categories, CategoryVo.class);
     }
 
 
     @Override
-    public ResponseEntity listAllCategory() {
+    public List<CategoryVo> listAllCategory() {
         // 根据分类状态进行查询
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Category::getStatus,SystemConstants.STATUS_NORMAL);
         // 封装数据
         List<Category> categories = categoryMapper.selectList(queryWrapper);
-        List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(categories,CategoryVo.class);
-        return new ResponseEntity<>(categoryVos, HttpStatus.OK);
+        return BeanCopyUtils.copyBeanList(categories,CategoryVo.class);
     }
 
     @Override
     @PreAuthorize("@ps.hasPermission('content:category:export')")
-    public ResponseEntity exportCategory(HttpServletResponse response) {
+    public ResponseResult exportCategory(HttpServletResponse response) {
         try {
             // 设置下载文件的请求头
             WebUtils.setDownLoadHeader("分类.xlsx", response);
@@ -92,7 +89,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             List<ExcelCategoryVo> excelCategoryVos = BeanCopyUtils.copyBeanList(category, ExcelCategoryVo.class);
             // 导出数据
             EasyExcel.write(response.getOutputStream(), ExcelCategoryVo.class).autoCloseStream(Boolean.FALSE).sheet("分类导出").doWrite(excelCategoryVos);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseResult.okResult();
         } catch (Exception e) {
             throw new SystemException(AppHttpCodeEnum.DOWNLOAD_ERROR,e.getMessage());
         }

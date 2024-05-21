@@ -4,13 +4,13 @@ import com.wbw1537.domain.dto.TagDto;
 import com.wbw1537.domain.dto.UserLoginDto;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.entity.Menu;
-import com.wbw1537.domain.vo.AdminUserInfoVo;
-import com.wbw1537.domain.vo.PageVo;
-import com.wbw1537.domain.vo.RoutersVo;
-import com.wbw1537.domain.vo.TagVo;
+import com.wbw1537.domain.vo.*;
+import com.wbw1537.utils.BeanCopyUtils;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class AdminBlogTestHelper {
@@ -26,8 +26,11 @@ public class AdminBlogTestHelper {
   public static final String TAG_LIST_API_PATH = "/content/tag/list";
   public static final String TAG_LIST_ALL_API_PATH = "/content/tag/listAllTags";
   public static final String TAG_API_PATH = "/content/tag";
-  public static final List<Category> CATEGORY_LIST = getCategoryList();
-  public static final Category CATEGORY = new Category(1L,"name",-1L,"description","status",null,null,null,null,0);
+  public static final List<Category> CATEGORY_LIST = Arrays.asList(
+          new Category(1L,"name",-1L,"description","status",1L,new Date(),1L,new Date(),0),
+          new Category(2L,"name",-1L,"description","status",2L,new Date(),2L,new Date(),0)
+  );
+  public static final Category CATEGORY = new Category(1L,"name",-1L,"description","status",1L,new Date(),1L,new Date(),0);
   public static final UserLoginDto USER_LOGIN_DTO_WITHOUT_USERNAME = new UserLoginDto("","password");
   public static final UserLoginDto USER_LOGIN_DTO = new UserLoginDto("userName","password");
   public static final AdminUserInfoVo ADMIN_USER_INFO_VO = new AdminUserInfoVo();

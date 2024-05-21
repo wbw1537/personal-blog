@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Category;
+import com.wbw1537.domain.vo.CategoryVo;
 import com.wbw1537.domain.vo.ExcelCategoryVo;
 import com.wbw1537.enums.AppHttpCodeEnum;
 import com.wbw1537.service.CategoryService;
@@ -12,6 +13,7 @@ import com.wbw1537.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +32,15 @@ public class AdminCategoryController {
 
     @ApiOperation(value = "List All Categories")
     @GetMapping("/listAllCategory")
-    public ResponseEntity listAllCategory() {
-        return categoryService.listAllCategory();
+    public ResponseEntity<List<CategoryVo>> listAllCategory() {
+        List<CategoryVo> categoryVos = categoryService.listAllCategory();
+        return new ResponseEntity<>(categoryVos, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Export Categories")
     @GetMapping("/export")
     public ResponseEntity exportCategory(HttpServletResponse response) {
-        return categoryService.exportCategory(response);
+        ResponseResult result = categoryService.exportCategory(response);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

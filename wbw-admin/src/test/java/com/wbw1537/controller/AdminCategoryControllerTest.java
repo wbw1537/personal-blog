@@ -2,6 +2,7 @@ package com.wbw1537.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbw1537.WbwAdminApplication;
+import com.wbw1537.domain.ResponseResult;
 import com.wbw1537.domain.entity.Category;
 import com.wbw1537.domain.vo.CategoryVo;
 import com.wbw1537.service.CategoryService;
@@ -50,14 +51,17 @@ public class AdminCategoryControllerTest {
   @Test
   public void getCategoryListShouldReturnOkResult() throws Exception {
     List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(AdminBlogTestHelper.CATEGORY_LIST, CategoryVo.class);
-    when(mockCategoryService.getCategoryList()).thenReturn(new ResponseEntity(categoryVos, HttpStatus.OK));
+    when(mockCategoryService.getCategoryList())
+            .thenReturn(categoryVos);
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.LIST_ALL_CATEGORY_API_PATH))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+            .andExpect(result -> categoryVos.equals(result.getResponse()));
   }
 
   @Test
   public void exportCategoryShouldReturnOkResult() throws Exception {
-    when(mockCategoryService.exportCategory(any())).thenReturn(new ResponseEntity(HttpStatus.OK));
+    when(mockCategoryService.exportCategory(any()))
+            .thenReturn(ResponseResult.okResult());
     mockMvc.perform(MockMvcRequestBuilders.get(AdminBlogTestHelper.EXPORT_CATEGORY_API_PATH))
         .andExpect(status().isOk());
   }
